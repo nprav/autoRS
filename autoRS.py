@@ -5,16 +5,17 @@
 #   - searches for all .ahl or .csv files in a specified folder
 #       - assumes that .csv files are in LS-DYNA single x axis output format
 #       - .csv files are assumed to have just one time column at the beginning
-#       - .csv files have 1 header line, and can have multiple subsequent columns
+#       - .csv files have 1 header line, and can have multiple subsequent
+#           columns
 #       - RS will be generated for all the columns after the first time column
 #   - for each file, extracts the acceleration time histories
-#   - generates acceleration response spectra for each time history per specified settings
+#   - generates acceleration response spectra for each time history
+#     per specified settings
 #   - writes acceleration response spectra in .csv files
 #   - uses input settings (including specified folder) from a text file
 
 # %% Import required libraries
 import numpy as np
-import pandas as pd
 from structpy.resp_spect import step_resp_spect, fft_resp_spect
 from structpy.rw import read_shk_ahl
 import os
@@ -114,33 +115,39 @@ def generate_rs_from_ahl(th_path, rs_path):
         ext=settings['ext'],
     )
 
-    df = pd.DataFrame(data=rs, index=frq,
-                      columns=['S_a'])
-
+    df = np.vstack((frq, rs)).T
     with open(rs_path, 'w', newline='') as file:
         file.write(os.path.split(rs_path)[-1])
         file.write("\n" + get_output_header_string())
-        df.to_csv(file, index_label="Frequency (Hz)",
-                  float_format='%.5f')
+        np.savetxt(
+            file, df, fmt='%.5f', delimiter=',', comments='',
+            header=",".join(["Frequency (Hz)", "S_a"]),
+        )
 
 
 def generate_rs_from_csv(th_path, rs_path):
-    df_th = pd.read_csv(th_path, skiprows=1, index_col=0)
-    df_th.dropna(axis=1, inplace=True)
+    df_th = np.genfromtxt(th_path, delimiter=',', skip_header=1, names=True,
+                          deletechars=" !#$%&'()*+,-./:;<=>?[\\]^{|}~")
     rs = {}
-    for column in df_th.columns:
+    time_col = df_th.dtype.names[0]
+    acc_cols = df_th.dtype.names[1:-1]
+    for column in acc_cols:
+        print(column)
         rs_column = column + "_S_a"
         rs[rs_column], frq = rs_function(
-            df_th[column].values, df_th.index,
+            df_th[column], df_th[time_col],
             zeta=settings['zeta'],
             ext=settings['ext'],
         )
-    df_rs = pd.DataFrame(data=rs, index=frq)
+
+    df_rs = np.vstack((frq, *rs.values())).T
     with open(rs_path, 'w', newline='') as file:
         file.write(os.path.split(rs_path)[-1])
         file.write("\n" + get_output_header_string())
-        df_rs.to_csv(file, index_label="Frequency (Hz)",
-                     float_format='%.5f')
+        np.savetxt(
+            file, df_rs, fmt='%.5f', delimiter=',', comments='',
+            header=",".join(["Frequency (Hz)", *rs.keys()]),
+        )
 
 
 # Write settings file
@@ -188,6 +195,7 @@ def get_data_paths(th_folder):
 
 # Main function with overall logic
 def generate_rs():
+    print("AutoRS", "June 18 2020\n", sep='\n')
     if settings_fname not in os.listdir('.'):
         write_default_settings()
         print("Settings file not detected. Rerun to "
@@ -195,14 +203,21 @@ def generate_rs():
         return
 
     get_settings()
+    print("Detected settings:")
+    for key, value in settings.items():
+        print("{} = {}".format(key, value))
+    print("")
 
     th_paths, rs_paths = get_data_paths(settings['folder'])
 
     for th_path, rs_path in zip(th_paths, rs_paths):
+        print(os.path.split(th_path)[-1])
         if th_path[-3:] == 'ahl':
             generate_rs_from_ahl(th_path, rs_path)
+            print("")
         elif th_path[-3:] == 'csv':
             generate_rs_from_csv(th_path, rs_path)
+            print("")
         else:
             continue
 
