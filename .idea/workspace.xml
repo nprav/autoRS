@@ -59,6 +59,9 @@
       <module name="GenerateResponseSpectra" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$APPLICATION_CONFIG_DIR$/scratches" />
       <option name="IS_MODULE_SDK" value="false" />
@@ -193,22 +196,22 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1344" height="211" key="GridCell.Tab.0.bottom" timestamp="1597254282177">
+    <state width="1344" height="211" key="GridCell.Tab.0.bottom" timestamp="1597262433041">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1344" height="211" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1597254282177" />
-    <state width="1344" height="211" key="GridCell.Tab.0.center" timestamp="1597254282177">
+    <state width="1344" height="211" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1597262433041" />
+    <state width="1344" height="211" key="GridCell.Tab.0.center" timestamp="1597262433041">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1344" height="211" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1597254282177" />
-    <state width="1344" height="211" key="GridCell.Tab.0.left" timestamp="1597254282177">
+    <state width="1344" height="211" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1597262433041" />
+    <state width="1344" height="211" key="GridCell.Tab.0.left" timestamp="1597262433041">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1344" height="211" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1597254282177" />
-    <state width="1344" height="211" key="GridCell.Tab.0.right" timestamp="1597254282177">
+    <state width="1344" height="211" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1597262433041" />
+    <state width="1344" height="211" key="GridCell.Tab.0.right" timestamp="1597262433041">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1344" height="211" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1597254282177" />
+    <state width="1344" height="211" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1597262433041" />
     <state x="68" y="0" key="SettingsEditor" timestamp="1597253672033">
       <screen x="0" y="0" width="1366" height="728" />
     </state>

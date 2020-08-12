@@ -20,6 +20,8 @@ from structpy.resp_spect import step_resp_spect, fft_resp_spect
 from structpy.rw import read_shk_ahl
 import os
 import re
+import sys
+import traceback
 
 # %% Define any global/default variables
 settings_fname = "RS_settings.txt"
@@ -223,10 +225,17 @@ def generate_rs():
             print("")
         else:
             continue
-
     print("RS Generation complete.")
 
 
 # %% Main body
 if __name__ == '__main__':
-    generate_rs()
+    try:
+        generate_rs()
+    except BaseException:
+        print("Error encountered.")
+        print(sys.exc_info()[0])
+        print(traceback.format_exc())
+    finally:
+        print("\nPress enter to exit.")
+        input()
