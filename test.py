@@ -56,6 +56,7 @@ class TestAutoRS(unittest.TestCase):
             "soil_z_acc.csv",
             "plot-L1A1D1-1-BE Soil-acc_x4.ahl",
             "soil_x_acc.csv",
+            "single_col_acc.csv",
         })
 
     def test_rs_from_ahl(self):
@@ -88,6 +89,15 @@ class TestAutoRS(unittest.TestCase):
         )
         rs_path = os.path.join(
             "test_folder", "RS", "test3.csv",
+        )
+        autoRS.generate_rs_from_csv(th_path, rs_path)
+
+        th_path = os.path.join(
+            "test_folder",
+            "single_col_acc.csv",
+        )
+        rs_path = os.path.join(
+            "test_folder", "RS", "test4.csv",
         )
         autoRS.generate_rs_from_csv(th_path, rs_path)
         self.assertTrue(os.path.isfile(rs_path))

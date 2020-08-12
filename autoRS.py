@@ -29,8 +29,8 @@ rs_function = step_resp_spect
 default_settings = {
     'folder': '.',
     'zeta': 0.05,
-    'ext': True,
-    'method': 'shake',
+    'ext': False,
+    'method': 'fft',
 }
 settings = default_settings.copy()
 
@@ -130,9 +130,12 @@ def generate_rs_from_csv(th_path, rs_path):
                           deletechars=" !#$%&'()*+,-./:;<=>?[\\]^{|}~")
     rs = {}
     time_col = df_th.dtype.names[0]
-    acc_cols = df_th.dtype.names[1:-1]
+    acc_cols = df_th.dtype.names[1:]
     for column in acc_cols:
         print(column)
+        if any(np.isnan(df_th[column])):
+            print('Nan detected; column skipped.')
+            continue
         rs_column = column + "_S_a"
         rs[rs_column], frq = rs_function(
             df_th[column], df_th[time_col],
