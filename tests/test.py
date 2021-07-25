@@ -7,22 +7,17 @@ from autoRS.rw import read_csv_multi
 
 
 class TestAutoRS(unittest.TestCase):
-
     def setUp(self):
-        with open("test_settings1.txt", 'w') as file:
-            file.write("folder=   C:\\Users\n"
-                       "sdf=a\n"
-                       "zeta=0.07\n"
-                       "ext=  n\n")
-        with open("test_settings2.txt", 'w') as file:
-            file.write("  folder   =  hello\n"
-                       "method= shake")
+        with open("test_settings1.txt", "w") as file:
+            file.write("folder=   C:\\Users\n" "sdf=a\n" "zeta=0.07\n" "ext=  n\n")
+        with open("test_settings2.txt", "w") as file:
+            file.write("  folder   =  hello\n" "method= shake")
         if not os.path.isdir(os.path.join("test_resources", "RS")):
             os.mkdir(os.path.join("test_resources", "RS"))
 
         shutil.copyfile(
             os.path.join("test_resources", "soil_z_acc.csv"),
-            os.path.join("soil_z_acc.csv")
+            os.path.join("soil_z_acc.csv"),
         )
 
         try:
@@ -33,31 +28,32 @@ class TestAutoRS(unittest.TestCase):
     def test_get_settings1(self):
         autoRS.get_settings("test_settings1.txt")
         print(autoRS.settings)
-        self.assertEqual(autoRS.settings['folder'], r'C:\Users')
-        self.assertEqual(autoRS.settings['zeta'], 0.07)
-        self.assertEqual(autoRS.settings['ext'], False)
-        self.assertEqual(set(autoRS.settings.keys()),
-                         set(autoRS.allowed_setting_keys))
+        self.assertEqual(autoRS.settings["folder"], r"C:\Users")
+        self.assertEqual(autoRS.settings["zeta"], 0.07)
+        self.assertEqual(autoRS.settings["ext"], False)
+        self.assertEqual(set(autoRS.settings.keys()), set(autoRS.allowed_setting_keys))
 
     def test_get_settings2(self):
         autoRS.get_settings("test_settings2.txt")
-        self.assertEqual(autoRS.settings['folder'], 'hello')
-        self.assertEqual(autoRS.settings['method'], 'shake')
+        self.assertEqual(autoRS.settings["folder"], "hello")
+        self.assertEqual(autoRS.settings["method"], "shake")
 
     def test_get_settings3(self):
         autoRS.write_default_settings("test_settings3.txt")
         autoRS.get_settings("test_settings3.txt")
-        self.assertEqual(autoRS.default_settings,
-                         autoRS.settings)
+        self.assertEqual(autoRS.default_settings, autoRS.settings)
 
     def test_TH_file_list(self):
         files = autoRS.get_TH_file_list("test_resources")
-        self.assertEqual(set(files), {
-            "soil_z_acc.csv",
-            "plot-L1A1D1-1-BE Soil-acc_x4.ahl",
-            "soil_x_acc.csv",
-            "single_col_acc.csv",
-        })
+        self.assertEqual(
+            set(files),
+            {
+                "soil_z_acc.csv",
+                "plot-L1A1D1-1-BE Soil-acc_x4.ahl",
+                "soil_x_acc.csv",
+                "single_col_acc.csv",
+            },
+        )
 
     def test_rs_from_ahl(self):
         th_path = os.path.join(
@@ -65,7 +61,9 @@ class TestAutoRS(unittest.TestCase):
             "plot-L1A1D1-1-BE Soil-acc_x4.ahl",
         )
         rs_path = os.path.join(
-            "test_resources", "RS", "test.csv",
+            "test_resources",
+            "RS",
+            "test.csv",
         )
         autoRS.generate_rs_from_ahl(th_path, rs_path)
         self.assertTrue(os.path.isfile(rs_path))
@@ -76,7 +74,9 @@ class TestAutoRS(unittest.TestCase):
             "soil_x_acc.csv",
         )
         rs_path = os.path.join(
-            "test_resources", "RS", "test2.csv",
+            "test_resources",
+            "RS",
+            "test2.csv",
         )
         autoRS.generate_rs_from_csv(th_path, rs_path)
         th_list = read_csv_multi(th_path, header=2)
@@ -88,7 +88,9 @@ class TestAutoRS(unittest.TestCase):
             "soil_z_acc.csv",
         )
         rs_path = os.path.join(
-            "test_resources", "RS", "test3.csv",
+            "test_resources",
+            "RS",
+            "test3.csv",
         )
         autoRS.generate_rs_from_csv(th_path, rs_path)
 
@@ -97,38 +99,32 @@ class TestAutoRS(unittest.TestCase):
             "single_col_acc.csv",
         )
         rs_path = os.path.join(
-            "test_resources", "RS", "test4.csv",
+            "test_resources",
+            "RS",
+            "test4.csv",
         )
         autoRS.generate_rs_from_csv(th_path, rs_path)
         self.assertTrue(os.path.isfile(rs_path))
 
     def test_make_RS_folder(self):
         rs_dir = autoRS.make_RS_folder("test_resources")
-        self.assertTrue(os.path.isdir(
-            os.path.join("test_resources", "RS")
-        ))
-        self.assertEqual(rs_dir,
-                         os.path.join("test_resources", "RS"))
+        self.assertTrue(os.path.isdir(os.path.join("test_resources", "RS")))
+        self.assertEqual(rs_dir, os.path.join("test_resources", "RS"))
 
     def test_get_data_paths(self):
         th_paths, rs_paths = autoRS.get_data_paths("test_resources")
         th_fnames = [os.path.split(x)[-1] for x in th_paths]
         rs_fnames = [os.path.split(x)[-1] for x in rs_paths]
         check = [
-            (re.split(x[:-4], y)[-1] == "_RS.csv") for
-            x, y in zip(th_fnames, rs_fnames)
+            (re.split(x[:-4], y)[-1] == "_RS.csv") for x, y in zip(th_fnames, rs_fnames)
         ]
         self.assertTrue(all(check))
 
     def test_generate_rs(self):
         autoRS.generate_rs()
-        self.assertFalse(os.path.isdir(
-            os.path.join("RS")
-        ))
+        self.assertFalse(os.path.isdir(os.path.join("RS")))
         autoRS.generate_rs()
-        self.assertTrue(len(os.listdir(
-            os.path.join("RS"))) == 1
-                        )
+        self.assertTrue(len(os.listdir(os.path.join("RS"))) == 1)
 
     def tearDown(self):
         tear_down_functions = [
@@ -136,8 +132,7 @@ class TestAutoRS(unittest.TestCase):
             lambda: os.remove("test_settings2.txt"),
             lambda: os.remove("test_settings3.txt"),
             lambda: os.remove("soil_z_acc.csv"),
-            lambda: shutil.rmtree(
-                os.path.join("test_resources", "RS")),
+            lambda: shutil.rmtree(os.path.join("test_resources", "RS")),
             lambda: shutil.rmtree(os.path.join("RS")),
         ]
         for function in tear_down_functions:
@@ -147,5 +142,5 @@ class TestAutoRS(unittest.TestCase):
                 continue
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -14,8 +14,9 @@ import re
 
 # %% Read functions
 
+
 def read_shk_ahl(filename, header=3, get_dt=False):
-    '''Read SHAKE .ahl time history output files.
+    """Read SHAKE .ahl time history output files.
 
     Parameters
     ----------
@@ -36,7 +37,7 @@ def read_shk_ahl(filename, header=3, get_dt=False):
         List of acceleration values from the .ahl file.
 
     dt : float, output only if get_dt = True
-    '''
+    """
 
     with open(filename) as file:
         ahl = []
@@ -56,7 +57,7 @@ def read_shk_ahl(filename, header=3, get_dt=False):
 
 
 def read_dmd_acc(filename):
-    '''Read surface and base time histories from D-MOD .acc file.
+    """Read surface and base time histories from D-MOD .acc file.
 
     Parameters
     ----------
@@ -70,9 +71,9 @@ def read_dmd_acc(filename):
 
     acc_base : 1D list of floats
         List of acceleration values of the base (last layer) time history.
-    '''
+    """
 
-    file = open(filename, 'r')
+    file = open(filename, "r")
     acc_surf = []
     acc_base = []
     file.seek(0, 0)
@@ -94,7 +95,7 @@ def read_dmd_acc(filename):
 
 
 def read_fort_txt(filename, header=8, cols=8, dgts=9):
-    '''Extract time histories from text files in fortran format.
+    """Extract time histories from text files in fortran format.
 
     Defaults to '8F9.6' format.
 
@@ -119,7 +120,7 @@ def read_fort_txt(filename, header=8, cols=8, dgts=9):
     -------
     acc : 1D list of floats
         List of values from the file.
-    '''
+    """
 
     file = open(filename)
     acc = []
@@ -139,7 +140,7 @@ def read_fort_txt(filename, header=8, cols=8, dgts=9):
 
 
 def read_TH_inp(filename):
-    '''Read default time history input files. Assumes a format of
+    """Read default time history input files. Assumes a format of
     r"time   value \n" on each line, with no header lines.
 
     Output = 2 lists of values as floats, first is time, second is acc value
@@ -158,7 +159,7 @@ def read_TH_inp(filename):
     acc : 1D list of floats
         List of ordinate values from the input file.
 
-    '''
+    """
 
     file = open(filename)
     acc = []
@@ -174,7 +175,7 @@ def read_TH_inp(filename):
 
 
 def read_csv(filename, header=1):
-    '''Reads .csv files with just two columns.
+    """Reads .csv files with just two columns.
 
     Parameters
     ----------
@@ -192,9 +193,9 @@ def read_csv(filename, header=1):
 
     acc : 1D list of floats
         List of ordinate values from the input file.
-    '''
+    """
 
-    file = open(filename, 'r')
+    file = open(filename, "r")
 
     acc = []
     tm = []
@@ -204,8 +205,8 @@ def read_csv(filename, header=1):
         if i >= header:
             s = True
         if s:
-            tm.append(float(line.split(',')[0]))
-            acc.append(float(line.split(',')[1]))
+            tm.append(float(line.split(",")[0]))
+            acc.append(float(line.split(",")[1]))
 
     file.close()
 
@@ -213,7 +214,7 @@ def read_csv(filename, header=1):
 
 
 def read_csv_multi(filename, header=1):
-    '''Reads .csv files with multiple columns.
+    """Reads .csv files with multiple columns.
 
     Parameters
     ----------
@@ -233,9 +234,9 @@ def read_csv_multi(filename, header=1):
         List of ordinate values from the file. Values from each
         abscissa column of the csv file are contained in a separate list
         within `acc`.
-    '''
+    """
 
-    file = open(filename, 'r')
+    file = open(filename, "r")
 
     file.seek(0, 0)
     s = False
@@ -257,9 +258,9 @@ def read_csv_multi(filename, header=1):
         if i >= header:
             s = True
         if s:
-            tm.append(float(line.split(',')[0]))
+            tm.append(float(line.split(",")[0]))
             for j in range(0, num_cols):
-                acc[j].append(float(line.split(',')[j+1]))
+                acc[j].append(float(line.split(",")[j + 1]))
 
     file.close()
 
@@ -267,7 +268,7 @@ def read_csv_multi(filename, header=1):
 
 
 def read_rsp(filename):
-    '''Read SHAKE/Rspmatch .spc response spectrum output file.
+    """Read SHAKE/Rspmatch .spc response spectrum output file.
 
     Input = filename with Rspmatch spc file
     Output = list with time period, list with abs. acc response in g's
@@ -284,9 +285,9 @@ def read_rsp(filename):
 
     rs : 1D list of floats
         List of spectral acceleration values.
-    '''
+    """
 
-    file = open(filename, 'r')
+    file = open(filename, "r")
     tp = []
     rs = []
     file.seek(0, 0)
@@ -312,38 +313,36 @@ def read_peer_record(filename):
 
     eq_record = {}
 
-    with open(filename, 'r') as file:
+    with open(filename, "r") as file:
         # Skip the first header line
         file.readline()
 
         line2 = file.readline()
-        props2 = line2.split(',')
-        eq_record.update(
-            dict(zip(['name', 'date', 'array', 'direction'], props2))
-        )
+        props2 = line2.split(",")
+        eq_record.update(dict(zip(["name", "date", "array", "direction"], props2)))
         # remove '\n' from end of direction string
-        eq_record['direction'] = eq_record['direction'].split()[0]
+        eq_record["direction"] = eq_record["direction"].split()[0]
 
         line3 = file.readline()
         props3 = line3.split()
-        eq_record['type'] = props3[0].lower()
-        eq_record['units'] = props3[-1].lower()
+        eq_record["type"] = props3[0].lower()
+        eq_record["units"] = props3[-1].lower()
 
         line4 = file.readline()
-        eq_record['npts'] = int(re.findall('(?<=NPTS=)[\d ]+(?=,)', line4)[0])
-        eq_record['dt'] = float(re.findall('(?<=DT=).+(?=SEC)', line4)[0])
+        eq_record["npts"] = int(re.findall("(?<=NPTS=)[\d ]+(?=,)", line4)[0])
+        eq_record["dt"] = float(re.findall("(?<=DT=).+(?=SEC)", line4)[0])
 
         # Read in time history
         th = []
         for line in file:
             th += list(map(float, line.split()))
-        eq_record['th'] = th
+        eq_record["th"] = th
 
     return eq_record
 
 
 def read_curve(filename, header=8):
-    '''Reads LS-DYNA curve files with x, y data.
+    """Reads LS-DYNA curve files with x, y data.
 
     Parameters
     ----------
@@ -361,9 +360,9 @@ def read_curve(filename, header=8):
 
     acc : 1D list of floats
         List of ordinate values from the input file.
-    '''
+    """
 
-    file = open(filename, 'r')
+    file = open(filename, "r")
 
     acc = []
     tm = []
@@ -386,8 +385,9 @@ def read_curve(filename, header=8):
 
 # %% Write functions
 
+
 def write_csv(filename, x, y, title="", txt="", col1="x", col2="y"):
-    '''Write a .csv file with x and y data, with descriptive text in 3
+    """Write a .csv file with x and y data, with descriptive text in 3
     header lines.
 
     Parameters
@@ -418,13 +418,13 @@ def write_csv(filename, x, y, title="", txt="", col1="x", col2="y"):
     Returns
     -------
     None
-    '''
+    """
 
-    file = open(filename, 'w')
+    file = open(filename, "w")
 
-    file.write(title+"\n")
-    file.write(txt+"\n")
-    file.write(col1+", "+col2+"\n")
+    file.write(title + "\n")
+    file.write(txt + "\n")
+    file.write(col1 + ", " + col2 + "\n")
 
     length = min(len(x), len(y))
     for i in range(0, length):
@@ -433,8 +433,8 @@ def write_csv(filename, x, y, title="", txt="", col1="x", col2="y"):
     file.close()
 
 
-def write_acc(acc, filename, header=8, txt=''):
-    '''Write a time history file in 8F9.6 Fortran format.
+def write_acc(acc, filename, header=8, txt=""):
+    """Write a time history file in 8F9.6 Fortran format.
 
     Input = ( list/array of acc files, filename, header = 8, txt = '')
     header = number of lines to skip at the start of the file (default = 8, min of 1)
@@ -452,36 +452,36 @@ def write_acc(acc, filename, header=8, txt=''):
     header : int>=1, optional
         Number of lines to skip at the start of the file.
         Should be an integer greater than 1. Defaults to 8.
-	
+
     txt : str
-        String input in first header line.	
+        String input in first header line.
 
     Returns
     -------
     None
-    '''
+    """
 
-    file = open(filename, 'w')
+    file = open(filename, "w")
     header = max(1, header)
 
-    file = open(filename, 'w')
+    file = open(filename, "w")
     file.seek(0, 0)
-    file.write(txt + '\n')
-    file.write("\n"*(header - 1))
+    file.write(txt + "\n")
+    file.write("\n" * (header - 1))
 
     if len(acc) % 8 > 0:
-        acc = np.append(acc, [0]*(8-len(acc) % 8))
+        acc = np.append(acc, [0] * (8 - len(acc) % 8))
 
     for i, num in enumerate(acc):
         file.write("%9.6f" % (num))
-        if (i+1) % 8 == 0:
+        if (i + 1) % 8 == 0:
             file.write("\n")
 
     file.close()
 
 
 def write_lcid(acc, filename, tstep=0.005, gap=2):
-    '''Writes a time history csv file with the option to pad
+    """Writes a time history csv file with the option to pad
     the first `gap` seconds with 0s.
 
     Parameters
@@ -504,16 +504,16 @@ def write_lcid(acc, filename, tstep=0.005, gap=2):
     Returns
     -------
     None
-    '''
+    """
 
-    file = open(filename, 'w')
+    file = open(filename, "w")
 
     if gap > 0:
         file.write("%10f,%10f \n" % (0, 0))
         file.write("%10f,%10f \n" % (gap, 0))
 
     for i, a in enumerate(acc):
-        t = tstep*(i+1)+gap
+        t = tstep * (i + 1) + gap
         file.write("%10f,%10f \n" % (t, a))
 
     file.close()
