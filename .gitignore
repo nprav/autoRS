@@ -1,0 +1,7 @@
+misc/**
+.idea/**
+__pycache__/**
+
+*.xml
+*.xml
+*.iml

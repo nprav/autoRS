@@ -1,9 +1,9 @@
 import unittest
-import autoRS
 import os
 import shutil
 import re
-from structpy.rw import read_csv_multi
+from context import autoRS
+from autoRS.rw import read_csv_multi
 
 
 class TestAutoRS(unittest.TestCase):
@@ -17,11 +17,11 @@ class TestAutoRS(unittest.TestCase):
         with open("test_settings2.txt", 'w') as file:
             file.write("  folder   =  hello\n"
                        "method= shake")
-        if not os.path.isdir(os.path.join("test_folder", "RS")):
-            os.mkdir(os.path.join("test_folder", "RS"))
+        if not os.path.isdir(os.path.join("test_resources", "RS")):
+            os.mkdir(os.path.join("test_resources", "RS"))
 
         shutil.copyfile(
-            os.path.join("test_folder", "soil_z_acc.csv"),
+            os.path.join("test_resources", "soil_z_acc.csv"),
             os.path.join("soil_z_acc.csv")
         )
 
@@ -51,7 +51,7 @@ class TestAutoRS(unittest.TestCase):
                          autoRS.settings)
 
     def test_TH_file_list(self):
-        files = autoRS.get_TH_file_list("test_folder")
+        files = autoRS.get_TH_file_list("test_resources")
         self.assertEqual(set(files), {
             "soil_z_acc.csv",
             "plot-L1A1D1-1-BE Soil-acc_x4.ahl",
@@ -61,22 +61,22 @@ class TestAutoRS(unittest.TestCase):
 
     def test_rs_from_ahl(self):
         th_path = os.path.join(
-            "test_folder",
+            "test_resources",
             "plot-L1A1D1-1-BE Soil-acc_x4.ahl",
         )
         rs_path = os.path.join(
-            "test_folder", "RS", "test.csv",
+            "test_resources", "RS", "test.csv",
         )
         autoRS.generate_rs_from_ahl(th_path, rs_path)
         self.assertTrue(os.path.isfile(rs_path))
 
     def test_rs_from_csv(self):
         th_path = os.path.join(
-            "test_folder",
+            "test_resources",
             "soil_x_acc.csv",
         )
         rs_path = os.path.join(
-            "test_folder", "RS", "test2.csv",
+            "test_resources", "RS", "test2.csv",
         )
         autoRS.generate_rs_from_csv(th_path, rs_path)
         th_list = read_csv_multi(th_path, header=2)
@@ -84,34 +84,34 @@ class TestAutoRS(unittest.TestCase):
         self.assertEqual(len(th_list[1]), len(rs_list[1]))
 
         th_path = os.path.join(
-            "test_folder",
+            "test_resources",
             "soil_z_acc.csv",
         )
         rs_path = os.path.join(
-            "test_folder", "RS", "test3.csv",
+            "test_resources", "RS", "test3.csv",
         )
         autoRS.generate_rs_from_csv(th_path, rs_path)
 
         th_path = os.path.join(
-            "test_folder",
+            "test_resources",
             "single_col_acc.csv",
         )
         rs_path = os.path.join(
-            "test_folder", "RS", "test4.csv",
+            "test_resources", "RS", "test4.csv",
         )
         autoRS.generate_rs_from_csv(th_path, rs_path)
         self.assertTrue(os.path.isfile(rs_path))
 
     def test_make_RS_folder(self):
-        rs_dir = autoRS.make_RS_folder("test_folder")
+        rs_dir = autoRS.make_RS_folder("test_resources")
         self.assertTrue(os.path.isdir(
-            os.path.join("test_folder", "RS")
+            os.path.join("test_resources", "RS")
         ))
         self.assertEqual(rs_dir,
-                         os.path.join("test_folder", "RS"))
+                         os.path.join("test_resources", "RS"))
 
     def test_get_data_paths(self):
-        th_paths, rs_paths = autoRS.get_data_paths("test_folder")
+        th_paths, rs_paths = autoRS.get_data_paths("test_resources")
         th_fnames = [os.path.split(x)[-1] for x in th_paths]
         rs_fnames = [os.path.split(x)[-1] for x in rs_paths]
         check = [
@@ -137,7 +137,7 @@ class TestAutoRS(unittest.TestCase):
             lambda: os.remove("test_settings3.txt"),
             lambda: os.remove("soil_z_acc.csv"),
             lambda: shutil.rmtree(
-                os.path.join("test_folder", "RS")),
+                os.path.join("test_resources", "RS")),
             lambda: shutil.rmtree(os.path.join("RS")),
         ]
         for function in tear_down_functions:
