@@ -18,8 +18,8 @@ Aim: Make an exe file that:
 
 # %% Import required libraries
 import numpy as np
-from .resp_spect import step_resp_spect, fft_resp_spect
-from .rw import read_shk_ahl
+from autoRS.resp_spect import step_resp_spect, fft_resp_spect
+from autoRS.rw import read_shk_ahl
 import os
 import re
 import sys
@@ -27,6 +27,7 @@ import traceback
 
 # %% Define any global/default variables
 settings_fname = "RS_settings.txt"
+date = "July 26 2021"
 allowed_setting_keys = ("folder", "zeta", "ext", "method")
 available_methods = ("shake", "fft")
 rs_function = step_resp_spect
@@ -215,9 +216,9 @@ def get_data_paths(th_folder):
     return th_paths, rs_paths
 
 
-# Main function with overall logic
+#  Function with overall logic
 def generate_rs():
-    print("AutoRS", "June 18 2020\n", sep="\n")
+    print("AutoRS", f"{date}\n", sep="\n")
     if settings_fname not in os.listdir("."):
         write_default_settings()
         print("Settings file not detected. Rerun to " "use default settings.")
@@ -244,8 +245,8 @@ def generate_rs():
     print("RS Generation complete.")
 
 
-# %% Main body
-if __name__ == "__main__":
+# Main function to run upon opening module or exe file
+def main():
     try:
         generate_rs()
     except BaseException:
@@ -255,3 +256,8 @@ if __name__ == "__main__":
     finally:
         print("\nPress enter to exit.")
         input()
+
+
+# %% Main body
+if __name__ == "__main__":
+    main()

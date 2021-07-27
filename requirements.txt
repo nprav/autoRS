@@ -1,0 +1,28 @@
+altgraph==0.17
+appdirs==1.4.4
+atomicwrites==1.4.0
+attrs @ file:///tmp/build/80754af9/attrs_1620827162558/work
+black==21.7b0
+certifi==2021.5.30
+click==8.0.1
+colorama @ file:///tmp/build/80754af9/colorama_1607707115595/work
+future==0.18.2
+iniconfig @ file:///home/linux1/recipes/ci/iniconfig_1610983019677/work
+more-itertools @ file:///tmp/build/80754af9/more-itertools_1622818384463/work
+mypy-extensions==0.4.3
+numpy==1.21.1
+packaging @ file:///tmp/build/80754af9/packaging_1625611678980/work
+pathspec==0.9.0
+pefile==2021.5.24
+pluggy @ file:///C:/ci/pluggy_1615976358795/work
+py @ file:///tmp/build/80754af9/py_1607971587848/work
+pyinstaller==4.4
+pyinstaller-hooks-contrib==2021.2
+pyparsing @ file:///home/linux1/recipes/ci/pyparsing_1610983426697/work
+pytest==6.2.4
+pywin32-ctypes==0.2.0
+regex==2021.7.6
+scipy==1.7.0
+toml @ file:///tmp/build/80754af9/toml_1616166611790/work
+tomli==1.1.0
+wincertstore==0.2

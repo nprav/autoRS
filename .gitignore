@@ -5,3 +5,11 @@ __pycache__/
 *.xml
 *.xml
 *.iml
+
+# Testing files/folders
+RS/
+
+# Pyinstaller files
+*.spec
+dist/
+build/
