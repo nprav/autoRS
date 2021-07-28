@@ -1,13 +1,15 @@
 misc/
 .idea/
 __pycache__/
+.pytest_cache/
+.coverage
 
-*.xml
 *.xml
 *.iml
 
 # Testing files/folders
 RS/
+tests/results.txt
 
 # Pyinstaller files
 *.spec
