@@ -13,5 +13,4 @@ tests/results.txt
 
 # Pyinstaller files
 *.spec
-dist/
 build/

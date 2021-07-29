@@ -5,6 +5,10 @@
 #	- Use pyinstaller to build .exe file
 #	- Delete any artifacts/temporary files
 
+# TODO: Setup virtual env with all req. packages.
+# TODO: Add compatible commands for Unix and Windows by detecting OS
+# TODO: Run tests prior to build
+
 # Variable to define the prerequisite files for build
 files = run.py autoRS/__init__.py autoRS/resp_spect.py autoRS/rw.py
 
