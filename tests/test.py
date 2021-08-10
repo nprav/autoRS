@@ -21,7 +21,7 @@ class TestAutoRS(unittest.TestCase):
         )
 
         try:
-            os.remove(autoRS.settings_fname)
+            os.remove(autoRS.SETTINGS_FNAME)
         except FileNotFoundError:
             pass
 
@@ -31,7 +31,7 @@ class TestAutoRS(unittest.TestCase):
         self.assertEqual(autoRS.settings["folder"], r"C:\Users")
         self.assertEqual(autoRS.settings["zeta"], 0.07)
         self.assertEqual(autoRS.settings["ext"], False)
-        self.assertEqual(set(autoRS.settings.keys()), set(autoRS.allowed_setting_keys))
+        self.assertEqual(set(autoRS.settings.keys()), set(autoRS.ALLOWED_SETTING_KEYS))
 
     def test_get_settings2(self):
         autoRS.get_settings("test_settings2.txt")
@@ -41,7 +41,7 @@ class TestAutoRS(unittest.TestCase):
     def test_get_settings3(self):
         autoRS.write_default_settings("test_settings3.txt")
         autoRS.get_settings("test_settings3.txt")
-        self.assertEqual(autoRS.default_settings, autoRS.settings)
+        self.assertEqual(autoRS.DEFAULT_SETTINGS, autoRS.settings)
 
     def test_TH_file_list(self):
         files = autoRS.get_TH_file_list("test_resources")

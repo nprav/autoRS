@@ -8,7 +8,7 @@ pnidamaluri
 ## Acceleration response spectra generator exe
 Aim: Make an exe file that:
   - searches for all .ahl or .csv files in a specified folder
-      - assumes that .csv files are in LS-DYNA single x axis output format
+      - assumes that .csv files are in LS-DYNA single x-axis output format
       - .csv files are assumed to have just one time column at the beginning
       - .csv files have 1 header line, and can have multiple subsequent columns
       - RS will be generated for all the columns after the first time column
