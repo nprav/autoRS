@@ -7,17 +7,22 @@ Module for generating and broadbanding acceleration response spectra.
 """
 
 # %% Import Necessary Modules
-import numpy as np
+
+# Standard library imports
 from time import perf_counter
 from itertools import accumulate
+from typing import Tuple
+
+# Third party imports
+import numpy as np
+from numpy.typing import ArrayLike
 
 
 # %% Response Spectrum Generation
 
 
-def get_step_matrix(w, zeta, dt):
-    """
-    Calculate the A, B matrices from [1] based on the input
+def get_step_matrix(w: float, zeta: float, dt: float) -> Tuple[np.ndarray, np.ndarray]:
+    """Calculate the A, B matrices from [1] based on the input
     angular frequency `w`, critical damping ratio, `zeta`,
     and timestep, `dt`.
 
@@ -37,10 +42,10 @@ def get_step_matrix(w, zeta, dt):
 
     Returns
     -------
-    A : (2,2) ndarray
+    A : (2, 2) ndarray
         Array to be matrix-multiplied by the [x_i, xdot_i] vector.
 
-    B : (2,2) ndarray
+    B : (2, 2) ndarray
         Array to be matrix-multiplied by the [a_i, a_(i+1)] vector.
 
     References
@@ -84,9 +89,13 @@ def get_step_matrix(w, zeta, dt):
     return A, B
 
 
-def step_resp_spect(acc, time_a, zeta=0.05, ext=True):
-    """
-    Generate acceleration response spectrum by the step-by-step method [1].
+def step_resp_spect(
+    acc: ArrayLike,
+    time_a: ArrayLike,
+    zeta: float = 0.05,
+    ext: bool = True,
+) -> Tuple[np.ndarray, np.ndarray]:
+    """Generate acceleration response spectrum by the step-by-step method [1].
     The algorithm is programmed to match that from SHAKE2000. The theory behind
     the algorithm assumes a 'segmentally-linear' acceleration time history (TH).
     Hence, the implicit assumption is that the time history nyquist frequency is
@@ -104,10 +113,10 @@ def step_resp_spect(acc, time_a, zeta=0.05, ext=True):
 
     Parameters
     ----------
-    acc : 1D array_like
+    acc : 1D ArrayLike
         Input acceleration time history (assumed to be in g's).
 
-    time_a : 1D array_like
+    time_a : 1D ArrayLike
         Input time values for the acceleration time history, `acc`.
 
     zeta : float, optional
@@ -121,10 +130,10 @@ def step_resp_spect(acc, time_a, zeta=0.05, ext=True):
 
     Returns
     -------
-    rs : 1D ndarray
+    rs : ndarray
         Array with spectral accelerations (same units as input acc).
 
-    frq : 1D ndarray
+    frq : ndarray
         Array with frequencies in Hz.
 
     References
@@ -152,15 +161,16 @@ def step_resp_spect(acc, time_a, zeta=0.05, ext=True):
     # Define timestep from input signal
     dt = time_a[1] - time_a[0]
 
-    # Define utility function to be used with itertools.accumulate
-    def func(x, a):
-        return np.dot(A, x) + np.dot(B, a)
-
     # Calculate response for a spring with each wn
     for k, wn in enumerate(w):
 
         # Calculate response acceleration time history
         A, B = get_step_matrix(wn, zeta, dt)
+
+        # Define utility function to be used with itertools.accumulate
+        def func(x_i: ArrayLike, a_i: ArrayLike) -> np.ndarray:
+            return np.dot(A, x_i) + np.dot(B, a_i)
+
         act = np.column_stack((acc[:-1], acc[1:]))
         act = np.append(np.array([[0, 0], [0, acc[0]]]), act, axis=0)
         x = np.array(list(accumulate(act, func)))
@@ -179,9 +189,13 @@ def step_resp_spect(acc, time_a, zeta=0.05, ext=True):
     return rs, frq
 
 
-def fft_resp_spect(acc, time_a, zeta=0.05, ext=True):
-    """
-    Generate acceleration response spectrum using a frequency domain
+def fft_resp_spect(
+    acc: ArrayLike,
+    time_a: ArrayLike,
+    zeta: float = 0.05,
+    ext: bool = True,
+) -> Tuple[np.ndarray, np.ndarray]:
+    """Generate acceleration response spectrum using a frequency domain
     method. This is physically accurate if the true acceleration time
     history has no frequency content higher than the nyquist frequency
     of the input acceleration.
@@ -194,10 +208,10 @@ def fft_resp_spect(acc, time_a, zeta=0.05, ext=True):
 
     Parameters
     ----------
-    acc : 1D array_like
+    acc : 1D ArrayLike
         Input acceleration time history (assumed to be in g's).
 
-    time_a : 1D array_like
+    time_a : 1D ArrayLike
         Input time values for the acceleration time history, `acc`.
 
     zeta : float, optional

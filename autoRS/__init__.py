@@ -26,6 +26,7 @@ from typing import Tuple, Callable, Dict, List
 
 # Third party imports
 import numpy as np
+from numpy.typing import ArrayLike
 
 # Local application imports
 from autoRS.resp_spect import step_resp_spect, fft_resp_spect
@@ -36,7 +37,9 @@ SETTINGS_FNAME: str = "RS_settings.txt"
 DATE: str = "July 26 2021"
 ALLOWED_SETTING_KEYS: Tuple[str, ...] = ("folder", "zeta", "ext", "method")
 AVAILABLE_METHODS: Tuple[str, ...] = ("shake", "fft")
-rs_function: Callable = step_resp_spect
+rs_function: Callable[
+    [ArrayLike, ArrayLike], Tuple[np.ndarray, np.ndarray]
+] = step_resp_spect
 DEFAULT_SETTINGS = {
     "folder": ".",
     "zeta": 0.05,
@@ -50,8 +53,11 @@ settings = DEFAULT_SETTINGS.copy()
 
 # Update the RS settings
 def get_settings(fname: str = SETTINGS_FNAME) -> None:
+    """Read the settings file (assuming it exists) and set up the settings
+    dictionary."""
     global settings, rs_function
 
+    # Parse the settings file and feed all valid key-value pairs into a raw dictionary
     with open(fname, "r") as file:
         raw_strings = [line for line in file]
         regex = "^(?P<key>.+)= *(?P<value>.*)$"
@@ -74,6 +80,8 @@ def get_settings(fname: str = SETTINGS_FNAME) -> None:
 
 # Convert raw settings to acceptable settings
 def process_settings(raw_settings: Dict[str, str]) -> Dict[str, str]:
+    """Given a raw settings dictionary, update the program settings. Use default values
+    in case of invalid raw setting definitions."""
     clean_settings = DEFAULT_SETTINGS.copy()
     clean_settings.update(raw_settings)
 
@@ -97,8 +105,8 @@ def process_settings(raw_settings: Dict[str, str]) -> Dict[str, str]:
     return clean_settings
 
 
-# Get list of csv/ ahl files
 def get_TH_file_list(path: str) -> List[str]:
+    """Get the list of .csv and .ahl time history files to process."""
     regex = r"\.(ahl)|(csv)$"
     files = list(
         filter(
@@ -109,21 +117,25 @@ def get_TH_file_list(path: str) -> List[str]:
     return files
 
 
-# Standard header details for Response Spectra output files
 def get_output_header_string() -> str:
+    """Generate header string for output Response Spectra output files."""
     string = (
-            "RS Settings:\n"
-            + "zeta = ,{}\n".format(settings["zeta"])
-            + "ext = ,{}\n".format(settings["ext"])
-            + "method = ,{}\n".format(settings["method"])
-            + "Note: Acceleration units will match the input TH.\n\n"
+        "RS Settings:\n"
+        + "zeta = ,{}\n".format(settings["zeta"])
+        + "ext = ,{}\n".format(settings["ext"])
+        + "method = ,{}\n".format(settings["method"])
+        + "Note: Acceleration units will match the input TH.\n\n"
     )
     return string
 
 
-# Generate RS from ahl or csv files, and save
+# Generate RS from all valid files (currently just .ahl and .csv) and save
+# TODO: Add additional file extensions (eg. .ot2, peer record, etc.)
+
+
 def generate_rs_from_ahl(th_path: str, rs_path: str) -> None:
-    acc, dt = read_shk_ahl(th_path, get_dt=True)
+    """Read .ahl time history from `th_path`. Generate the RS. Write to `rs_path`."""
+    acc, dt = read_shk_ahl(th_path)
     time = np.arange(0, dt * len(acc), dt)
     rs, frq = rs_function(
         acc,
@@ -132,7 +144,10 @@ def generate_rs_from_ahl(th_path: str, rs_path: str) -> None:
         ext=settings["ext"],
     )
 
+    # Reformat `rs`, `frq` arrays as a combined array for use in np.savetxt.
     df = np.vstack((frq, rs)).T
+
+    # Open file and write informative header lines + RS data
     with open(rs_path, "w", newline="") as file:
         file.write(os.path.split(rs_path)[-1])
         file.write("\n" + get_output_header_string())
@@ -147,6 +162,8 @@ def generate_rs_from_ahl(th_path: str, rs_path: str) -> None:
 
 
 def generate_rs_from_csv(th_path: str, rs_path: str) -> None:
+    """Read .csv time history(s) from `th_path`. Generate the RS.
+    Write to `rs_path`."""
     df_th = np.genfromtxt(
         th_path,
         delimiter=",",
@@ -154,6 +171,9 @@ def generate_rs_from_csv(th_path: str, rs_path: str) -> None:
         names=True,
         deletechars=" !#$%&'()*+,-./:;<=>?[\\]^{|}~",
     )
+
+    # .csv file may have multiple time history columns. Hence, define RS
+    # as a dictionary and generate separately for each column.
     rs = {}
     time_col = df_th.dtype.names[0]
     acc_cols = df_th.dtype.names[1:]
@@ -170,7 +190,10 @@ def generate_rs_from_csv(th_path: str, rs_path: str) -> None:
             ext=settings["ext"],
         )
 
+    # Reformat `rs`, `frq` arrays as a combined array for use in np.savetxt.
     df_rs = np.vstack((frq, *rs.values())).T
+
+    # Open file and write informative header lines + RS data
     with open(rs_path, "w", newline="") as file:
         file.write(os.path.split(rs_path)[-1])
         file.write("\n" + get_output_header_string())
@@ -184,26 +207,27 @@ def generate_rs_from_csv(th_path: str, rs_path: str) -> None:
         )
 
 
-# Write settings file
 def write_default_settings(fname=SETTINGS_FNAME) -> None:
+    """Write default settings file."""
     with open(fname, "x") as file:
         file.write("Response Spectrum Generator settings file\n")
         file.write("\n")
-        file.write("Folder with input time " "histories in .ahl or .csv format:\n")
+        file.write("Folder with input time histories in .ahl or .csv format:\n")
         file.write("folder = {}\n".format(DEFAULT_SETTINGS["folder"]))
         file.write("\n")
         file.write("Critical damping ratio:\n")
         file.write("zeta = {}\n".format(DEFAULT_SETTINGS["zeta"]))
         file.write("\n")
-        file.write("Generate RS up to 1000Hz (y) " "or just 100Hz (n)?\n")
+        file.write("Generate RS up to 1000Hz (y) or just 100Hz (n)?\n")
         file.write("ext = {}\n".format("y" if DEFAULT_SETTINGS["ext"] else "n"))
         file.write("\n")
         file.write("Choose RS generation method (fft, or shake):\n")
         file.write("method = {}".format(DEFAULT_SETTINGS["method"]))
 
 
-# Prepare RS folder
 def make_RS_folder(path: str) -> str:
+    """Make RS folder at given path (if it does not exist already).
+    Returns the final RS directory."""
     rs_dir = os.path.join(os.path.join(path, "RS"))
     try:
         os.mkdir(rs_dir)
@@ -214,22 +238,38 @@ def make_RS_folder(path: str) -> str:
 
 
 # Get paths of all THs and RSs
-def get_data_paths(th_folder: str) -> [str, str]:
+def get_data_paths(th_folder: str) -> Tuple[List[str], List[str]]:
+    """For a given folder path with time histories, return all time history files and
+    generate prospective RS files."""
+
+    # Make/get RS folder in the given time history directory.
     rs_folder = make_RS_folder(th_folder)
+
+    # Get all the valid TH files from the time history folder
     th_fnames = get_TH_file_list(th_folder)
+
+    # Create and return the absolute TH/RS paths of each file
     th_paths = [os.path.join(th_folder, fname) for fname in th_fnames]
     rs_paths = [os.path.join(rs_folder, fname[:-4] + "_RS.csv") for fname in th_fnames]
     return th_paths, rs_paths
 
 
-#  Function with overall logic
 def generate_rs() -> None:
+    """Overall program logic:
+    -   Detects settings in the default settings file (`SETTINGS_FNAME`).
+    -   Generate RS for all valid TH files in the target directory listed in
+        the settings file.
+    """
+
     print("AutoRS", f"{DATE}\n", sep="\n")
+
+    # Generate the default settings file if the settings file is not detected.
     if SETTINGS_FNAME not in os.listdir("."):
         write_default_settings()
         print("Settings file not detected. Rerun to " "use default settings.")
         return
 
+    # Parse the settings in the settings text file. Print the detected settings.
     get_settings()
     print("Detected settings:")
     for key, value in settings.items():
@@ -238,6 +278,9 @@ def generate_rs() -> None:
 
     th_paths, rs_paths = get_data_paths(settings["folder"])
 
+    # Generate spectra for each valid time history file.
+    # TODO: Convert if-else chain to dictionary as additional TH extension
+    #   options are added.
     for th_path, rs_path in zip(th_paths, rs_paths):
         print(os.path.split(th_path)[-1])
         if th_path[-3:] == "ahl":
@@ -251,8 +294,8 @@ def generate_rs() -> None:
     print("RS Generation complete.")
 
 
-# Main function to run upon opening module or exe file
 def main() -> None:
+    """Main function to run upon opening module or exe file."""
     try:
         generate_rs()
     except BaseException:
@@ -260,6 +303,10 @@ def main() -> None:
         print(sys.exc_info()[0])
         print(traceback.format_exc())
     finally:
+        # When using pyinstaller to generate a .exe file, the program runs in
+        # a command prompt/terminal. As soon as the last command is completed, the
+        # terminal closes. This makes it difficult to view/debug the printed text.
+        # --> Use input() to enforce terminal to wait for user input to exit.
         print("\nPress enter to exit.")
         input()
 
