@@ -3,6 +3,7 @@ misc/
 __pycache__/
 .pytest_cache/
 .coverage
+*/RS_settings.txt
 
 *.xml
 *.iml
