@@ -17,9 +17,9 @@ tests/results.txt
 build/
 
 # Sphinx files
-docs/_static
-docs/_build
-docs/_templates
+docs/*/_static
+docs/*/build
+docs/*/_templates
 
 # Experiment files/folders
 experiment/

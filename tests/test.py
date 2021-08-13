@@ -52,6 +52,7 @@ class TestAutoRS(unittest.TestCase):
                 "plot-L1A1D1-1-BE Soil-acc_x4.ahl",
                 "soil_x_acc.csv",
                 "single_col_acc.csv",
+                "nan_slab_set3.csv",
             },
         )
 
@@ -105,6 +106,20 @@ class TestAutoRS(unittest.TestCase):
         )
         autoRS.generate_rs_from_csv(th_path, rs_path)
         self.assertTrue(os.path.isfile(rs_path))
+
+        th_path = os.path.join(
+            "test_resources",
+            "nan_slab_set3.csv",
+        )
+        rs_path = os.path.join(
+            "test_resources",
+            "RS",
+            "test5.csv",
+        )
+        autoRS.generate_rs_from_csv(th_path, rs_path)
+        # All columns in `nan_slab_set3.csv` are invalid. No file should
+        # be generated.
+        self.assertFalse(os.path.isfile(rs_path))
 
     def test_make_RS_folder(self):
         rs_dir = autoRS.make_RS_folder("test_resources")

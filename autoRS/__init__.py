@@ -190,6 +190,12 @@ def generate_rs_from_csv(th_path: str, rs_path: str) -> None:
             ext=settings["ext"],
         )
 
+    # If no valid THs and Nans detected in all cases, rs dictionary will be
+    # empty. Exit from function
+    if not rs:
+        print("No valid columns in file. No RS generated. File skipped.")
+        return
+
     # Reformat `rs`, `frq` arrays as a combined array for use in np.savetxt.
     df_rs = np.vstack((frq, *rs.values())).T
 
