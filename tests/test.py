@@ -16,8 +16,8 @@ class TestAutoRS(unittest.TestCase):
             os.mkdir(os.path.join("test_resources", "RS"))
 
         shutil.copyfile(
-            os.path.join("test_resources", "soil_z_acc.csv"),
-            os.path.join("soil_z_acc.csv"),
+            os.path.join("test_resources", "single_col_w_comma.csv"),
+            os.path.join("single_col_w_comma.csv"),
         )
 
         try:
@@ -48,18 +48,18 @@ class TestAutoRS(unittest.TestCase):
         self.assertEqual(
             set(files),
             {
-                "soil_z_acc.csv",
-                "plot-L1A1D1-1-BE Soil-acc_x4.ahl",
-                "soil_x_acc.csv",
-                "single_col_acc.csv",
-                "nan_slab_set3.csv",
+                "single_col_w_comma.csv",
+                "shake_acc_eg.ahl",
+                "multi_col.csv",
+                "single_col_wo_comma.csv",
+                "nan_eg.csv",
             },
         )
 
     def test_rs_from_ahl(self):
         th_path = os.path.join(
             "test_resources",
-            "plot-L1A1D1-1-BE Soil-acc_x4.ahl",
+            "shake_acc_eg.ahl",
         )
         rs_path = os.path.join(
             "test_resources",
@@ -72,7 +72,7 @@ class TestAutoRS(unittest.TestCase):
     def test_rs_from_csv(self):
         th_path = os.path.join(
             "test_resources",
-            "soil_x_acc.csv",
+            "multi_col.csv",
         )
         rs_path = os.path.join(
             "test_resources",
@@ -86,7 +86,7 @@ class TestAutoRS(unittest.TestCase):
 
         th_path = os.path.join(
             "test_resources",
-            "soil_z_acc.csv",
+            "single_col_w_comma.csv",
         )
         rs_path = os.path.join(
             "test_resources",
@@ -97,7 +97,7 @@ class TestAutoRS(unittest.TestCase):
 
         th_path = os.path.join(
             "test_resources",
-            "single_col_acc.csv",
+            "single_col_wo_comma.csv",
         )
         rs_path = os.path.join(
             "test_resources",
@@ -109,7 +109,7 @@ class TestAutoRS(unittest.TestCase):
 
         th_path = os.path.join(
             "test_resources",
-            "nan_slab_set3.csv",
+            "nan_eg.csv",
         )
         rs_path = os.path.join(
             "test_resources",
@@ -117,7 +117,7 @@ class TestAutoRS(unittest.TestCase):
             "test5.csv",
         )
         autoRS.generate_rs_from_csv(th_path, rs_path)
-        # All columns in `nan_slab_set3.csv` are invalid. No file should
+        # All columns in `nan_eg.csv` are invalid. No file should
         # be generated.
         self.assertFalse(os.path.isfile(rs_path))
 
@@ -146,7 +146,7 @@ class TestAutoRS(unittest.TestCase):
             lambda: os.remove("test_settings1.txt"),
             lambda: os.remove("test_settings2.txt"),
             lambda: os.remove("test_settings3.txt"),
-            lambda: os.remove("soil_z_acc.csv"),
+            lambda: os.remove("single_col_w_comma.csv"),
             lambda: shutil.rmtree(os.path.join("test_resources", "RS")),
             lambda: shutil.rmtree(os.path.join("RS")),
         ]
