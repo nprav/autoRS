@@ -22,4 +22,5 @@ docs/*/build
 docs/*/_templates
 
 # Experiment files/folders
-experiment/
+# experiment/
+*-checkpoint.ipynb
