@@ -1,11 +1,4 @@
-"""
-Created: Nov 2017
-Latest update:  Aug 2019
-@author: Praveer Nidamaluri
-
-Module that provides file read/write functions for
-shake/dmod/peer inputs and outputs.
-"""
+"""Custom file read functions."""
 
 # %% Import required modules
 from typing import List, Tuple

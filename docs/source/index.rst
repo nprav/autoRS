@@ -24,7 +24,8 @@ The autoRS repository includes the Python module for the underlying behaviour. T
    the top of the file. The second header line is assumed to designate the title of
    each column in the data.
 
-**New capabilities to be added:**
+New capabilities to be added
+----------------------------
 
 * Generation of velocity and displacement response spectra.
 * Additional settings including:
@@ -37,13 +38,12 @@ The autoRS repository includes the Python module for the underlying behaviour. T
 Contents
 --------
 
-.. automodule:: autoRS
-   :members:
-   :undoc-members:
-
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+
+   autoRS
+   autoRS.resp_spect
+   autoRS.rw
 
 
 Indices and tables
