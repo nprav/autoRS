@@ -1,12 +1,17 @@
+"""Unit tests for autoRS.__init__."""
+
+# Standard library imports
 import unittest
 import os
 import shutil
 import re
+
+# Local Application Imports
 from context import autoRS
 from autoRS.rw import read_csv_multi
 
 
-class TestAutoRS(unittest.TestCase):
+class TestMain(unittest.TestCase):
     def setUp(self):
         with open("test_settings1.txt", "w") as file:
             file.write("folder=   C:\\Users\n" "sdf=a\n" "zeta=0.07\n" "ext=  n\n")

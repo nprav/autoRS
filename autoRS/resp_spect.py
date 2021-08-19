@@ -18,10 +18,31 @@ import numpy as np
 from numpy.typing import ArrayLike
 
 
+# %% Utility functions
+
+
+def get_asme_frequencies() -> np.ndarray:
+    """Generates array of frequencies (Hz) for spectral generation as specified
+    in ASME B&PVC Division I, Section III, Non-mandatory appendix N, Table
+    N-1226-1.
+
+    Returns
+    -------
+    np.ndarray: Array of frequency points (Hz).
+    """
+    frq_range = (0.5, 3, 3.6, 5, 8, 15, 18, 22, 34)
+    increments = (0.1, 0.15, 0.2, 0.25, 0.5, 1, 2, 3)
+    frqs = np.concatenate(
+        [np.arange(*args) for args in zip(frq_range[:-1], frq_range[1:], increments)]
+    )
+    frqs = np.append(frqs, frq_range[-1])
+    return frqs
+
+
 # %% Response Spectrum Generation
 
 
-def get_step_matrix(w: float, zeta: float, dt: float) -> Tuple[np.ndarray, np.ndarray]:
+def _get_step_matrix(w: float, zeta: float, dt: float) -> Tuple[np.ndarray, np.ndarray]:
     """Calculate the A, B matrices from [1] based on the input
     angular frequency `w`, critical damping ratio, `zeta`,
     and timestep, `dt`.
@@ -165,7 +186,7 @@ def step_resp_spect(
     for k, wn in enumerate(w):
 
         # Calculate response acceleration time history
-        A, B = get_step_matrix(wn, zeta, dt)
+        A, B = _get_step_matrix(wn, zeta, dt)
 
         # Define utility function to be used with itertools.accumulate
         def func(x_i: ArrayLike, a_i: ArrayLike) -> np.ndarray:
@@ -258,7 +279,7 @@ def fft_resp_spect(
 
     # Get n for upsampling by sinc-interpolating so there are
     # `multiplier` times as many points
-    multiplier = 10
+    multiplier = 8
 
     # Get FFT of input acceleration
     xgfft = np.fft.rfft(acc, n_fft)
