@@ -1,10 +1,4 @@
-"""
-Created: Nov 2017
-Latest update:  June 2020
-@author: Praveer Nidamaluri
-
-Module for generating and broadbanding acceleration response spectra.
-"""
+"""Response Spectra generation functions."""
 
 # %% Import Necessary Modules
 
@@ -30,7 +24,7 @@ def get_asme_frequencies() -> np.ndarray:
     -------
     np.ndarray: Array of frequency points (Hz).
     """
-    frq_range = (0.5, 3, 3.6, 5, 8, 15, 18, 22, 34)
+    frq_range = (0.1, 3, 3.6, 5, 8, 15, 18, 22, 34)
     increments = (0.1, 0.15, 0.2, 0.25, 0.5, 1, 2, 3)
     frqs = np.concatenate(
         [np.arange(*args) for args in zip(frq_range[:-1], frq_range[1:], increments)]
@@ -39,10 +33,54 @@ def get_asme_frequencies() -> np.ndarray:
     return frqs
 
 
+def get_default_frequencies(high_frequency: bool = False) -> np.ndarray:
+    """Generates default array of frequencies (Hz), with 100 total points if the range
+    is from [0.1Hz, 100Hz], or 115 total points if the range is [0.1Hz, 1000Hz].
+
+    Parameters
+    ----------
+    high_frequency: bool
+                    If false (default), frequency range is 100 points in [0.1Hz, 100Hz].
+                    If true, frequency range is 115 total points in [0.1Hz, 1000Hz].
+
+    Returns
+    -------
+    np.ndarray: Array of frequency points (Hz).
+    """
+
+    frqs = get_asme_frequencies()
+
+    # Number of points to add from end of frqs to 100Hz
+    npts_low = 100 - len(frqs)
+
+    # Generate points up to 100Hz
+    frqs = np.append(
+        frqs,
+        [
+            round(x)
+            for x in np.geomspace(frqs[-1], 100, npts_low + 1, endpoint=True)[1:]
+        ],
+    )
+
+    if high_frequency:
+        # Additional number of points from 100Hz to 1000Hz.
+        npts_high = 15
+        frqs = np.append(
+            frqs,
+            [
+                round(x)
+                for x in np.geomspace(frqs[-1], 1000, npts_high + 1, endpoint=True)[1:]
+            ],
+        )
+    return frqs
+
+
 # %% Response Spectrum Generation
 
 
-def _get_step_matrix(w: float, zeta: float, dt: float) -> Tuple[np.ndarray, np.ndarray]:
+def _get_step_matrix(
+    w: float, zeta: float, dt: float,
+) -> Tuple[np.ndarray, np.ndarray]:
     """Calculate the A, B matrices from [1] based on the input
     angular frequency `w`, critical damping ratio, `zeta`,
     and timestep, `dt`.
@@ -111,10 +149,7 @@ def _get_step_matrix(w: float, zeta: float, dt: float) -> Tuple[np.ndarray, np.n
 
 
 def step_resp_spect(
-    acc: ArrayLike,
-    time_a: ArrayLike,
-    zeta: float = 0.05,
-    ext: bool = True,
+    acc: ArrayLike, time_a: ArrayLike, zeta: float = 0.05, ext: bool = True,
 ) -> Tuple[np.ndarray, np.ndarray]:
     """Generate acceleration response spectrum by the step-by-step method [1].
     The algorithm is programmed to match that from SHAKE2000. The theory behind
@@ -211,10 +246,7 @@ def step_resp_spect(
 
 
 def fft_resp_spect(
-    acc: ArrayLike,
-    time_a: ArrayLike,
-    zeta: float = 0.05,
-    ext: bool = True,
+    acc: ArrayLike, time_a: ArrayLike, zeta: float = 0.05, ext: bool = True,
 ) -> Tuple[np.ndarray, np.ndarray]:
     """Generate acceleration response spectrum using a frequency domain
     method. This is physically accurate if the true acceleration time
