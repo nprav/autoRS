@@ -12,7 +12,7 @@ from numpy.typing import ArrayLike
 
 # Local Application Imports
 from context import autoRS
-from autoRS.resp_spect import get_asme_frequencies, get_default_frequencies
+from autoRS.spectrum import get_asme_frequencies, get_default_frequencies
 from autoRS.rw import read_csv_multi
 
 

@@ -6,29 +6,25 @@ import os
 import re
 import sys
 import traceback
-from typing import Tuple, Callable, Dict, List
+from typing import Tuple, Dict, List
 
 # Third party imports
 import numpy as np
-from numpy.typing import ArrayLike
 
 # Local application imports
-from autoRS.resp_spect import step_resp_spect, fft_resp_spect
+from autoRS.spectrum import response_spectrum, RS_METHODS, DEFAULT_METHOD
 from autoRS.rw import read_shk_ahl
 
 # %% Define any global/default variables
 SETTINGS_FNAME: str = "RS_settings.txt"
 DATE: str = "July 26 2021"
 ALLOWED_SETTING_KEYS: Tuple[str, ...] = ("folder", "zeta", "ext", "method")
-AVAILABLE_METHODS: Tuple[str, ...] = ("shake", "fft")
-rs_function: Callable[
-    [ArrayLike, ArrayLike], Tuple[np.ndarray, np.ndarray]
-] = step_resp_spect
+AVAILABLE_METHODS: Tuple[str, ...] = tuple(RS_METHODS.keys())
 DEFAULT_SETTINGS = {
     "folder": ".",
     "zeta": 0.05,
     "ext": False,
-    "method": "fft",
+    "method": DEFAULT_METHOD,
 }
 settings = DEFAULT_SETTINGS.copy()
 
@@ -39,7 +35,7 @@ settings = DEFAULT_SETTINGS.copy()
 def get_settings(fname: str = SETTINGS_FNAME) -> None:
     """Read the settings file (assuming it exists) and set up the settings
     dictionary."""
-    global settings, rs_function
+    global settings
 
     # Parse the settings file and feed all valid key-value pairs into a raw dictionary
     with open(fname, "r") as file:
@@ -55,11 +51,6 @@ def get_settings(fname: str = SETTINGS_FNAME) -> None:
                     raw_settings[key] = value
 
     settings = process_settings(raw_settings)
-
-    if settings["method"] == "fft":
-        rs_function = fft_resp_spect
-    else:
-        rs_function = step_resp_spect
 
 
 # Convert raw settings to acceptable settings
@@ -92,12 +83,7 @@ def process_settings(raw_settings: Dict[str, str]) -> Dict[str, str]:
 def get_TH_file_list(path: str) -> List[str]:
     """Get the list of .csv and .ahl time history files to process."""
     regex = r"\.(ahl)|(csv)$"
-    files = list(
-        filter(
-            lambda file: re.search(regex, file),
-            os.listdir(path),
-        )
-    )
+    files = list(filter(lambda file: re.search(regex, file), os.listdir(path),))
     return files
 
 
@@ -121,11 +107,8 @@ def generate_rs_from_ahl(th_path: str, rs_path: str) -> None:
     """Read .ahl time history from `th_path`. Generate the RS. Write to `rs_path`."""
     acc, dt = read_shk_ahl(th_path)
     time = np.arange(0, dt * len(acc), dt)
-    rs, frq = rs_function(
-        acc,
-        time,
-        zeta=settings["zeta"],
-        ext=settings["ext"],
+    rs, frq = response_spectrum(
+        acc, time, zeta=settings["zeta"], high_frequency=settings["ext"],
     )
 
     # Reformat `rs`, `frq` arrays as a combined array for use in np.savetxt.
@@ -167,11 +150,11 @@ def generate_rs_from_csv(th_path: str, rs_path: str) -> None:
             print("Nan detected; column skipped.")
             continue
         rs_column = column + "_S_a"
-        rs[rs_column], frq = rs_function(
+        rs[rs_column], frq = response_spectrum(
             df_th[column],
             df_th[time_col],
             zeta=settings["zeta"],
-            ext=settings["ext"],
+            high_frequency=settings["ext"],
         )
 
     # If no valid THs and Nans detected in all cases, rs dictionary will be

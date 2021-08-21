@@ -62,65 +62,30 @@ class TestMain(unittest.TestCase):
         )
 
     def test_rs_from_ahl(self):
-        th_path = os.path.join(
-            "test_resources",
-            "shake_acc_eg.ahl",
-        )
-        rs_path = os.path.join(
-            "test_resources",
-            "RS",
-            "test.csv",
-        )
+        th_path = os.path.join("test_resources", "shake_acc_eg.ahl",)
+        rs_path = os.path.join("test_resources", "RS", "test.csv",)
         autoRS.generate_rs_from_ahl(th_path, rs_path)
         self.assertTrue(os.path.isfile(rs_path))
 
     def test_rs_from_csv(self):
-        th_path = os.path.join(
-            "test_resources",
-            "multi_col.csv",
-        )
-        rs_path = os.path.join(
-            "test_resources",
-            "RS",
-            "test2.csv",
-        )
+        th_path = os.path.join("test_resources", "multi_col.csv",)
+        rs_path = os.path.join("test_resources", "RS", "test2.csv",)
         autoRS.generate_rs_from_csv(th_path, rs_path)
         th_list = read_csv_multi(th_path, header=2)
         rs_list = read_csv_multi(rs_path, header=8)
         self.assertEqual(len(th_list[1]), len(rs_list[1]))
 
-        th_path = os.path.join(
-            "test_resources",
-            "single_col_w_comma.csv",
-        )
-        rs_path = os.path.join(
-            "test_resources",
-            "RS",
-            "test3.csv",
-        )
+        th_path = os.path.join("test_resources", "single_col_w_comma.csv",)
+        rs_path = os.path.join("test_resources", "RS", "test3.csv",)
         autoRS.generate_rs_from_csv(th_path, rs_path)
 
-        th_path = os.path.join(
-            "test_resources",
-            "single_col_wo_comma.csv",
-        )
-        rs_path = os.path.join(
-            "test_resources",
-            "RS",
-            "test4.csv",
-        )
+        th_path = os.path.join("test_resources", "single_col_wo_comma.csv",)
+        rs_path = os.path.join("test_resources", "RS", "test4.csv",)
         autoRS.generate_rs_from_csv(th_path, rs_path)
         self.assertTrue(os.path.isfile(rs_path))
 
-        th_path = os.path.join(
-            "test_resources",
-            "nan_eg.csv",
-        )
-        rs_path = os.path.join(
-            "test_resources",
-            "RS",
-            "test5.csv",
-        )
+        th_path = os.path.join("test_resources", "nan_eg.csv",)
+        rs_path = os.path.join("test_resources", "RS", "test5.csv",)
         autoRS.generate_rs_from_csv(th_path, rs_path)
         # All columns in `nan_eg.csv` are invalid. No file should
         # be generated.

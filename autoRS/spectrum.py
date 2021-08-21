@@ -5,12 +5,14 @@
 # Standard library imports
 from time import perf_counter
 from itertools import accumulate
-from typing import Tuple
+from typing import Tuple, Union, List
 
 # Third party imports
 import numpy as np
-from numpy.typing import ArrayLike
 
+# Type Aliases
+numeric = Union[int, float]
+array_like_1d = Union[List[numeric], Tuple[numeric], np.ndarray]
 
 # %% Utility functions
 
@@ -72,10 +74,11 @@ def get_default_frequencies(high_frequency: bool = False) -> np.ndarray:
                 for x in np.geomspace(frqs[-1], 1000, npts_high + 1, endpoint=True)[1:]
             ],
         )
+
     return frqs
 
 
-# %% Response Spectrum Generation
+# %% Raw private response spectrum generation functions
 
 
 def _get_step_matrix(
@@ -148,48 +151,37 @@ def _get_step_matrix(
     return A, B
 
 
-def step_resp_spect(
-    acc: ArrayLike, time_a: ArrayLike, zeta: float = 0.05, ext: bool = True,
-) -> Tuple[np.ndarray, np.ndarray]:
+def _step_rs(
+    acc: array_like_1d, time: array_like_1d, frqs: array_like_1d, zeta: float = 0.05,
+) -> [np.ndarray, np.ndarray]:
     """Generate acceleration response spectrum by the step-by-step method [1].
-    The algorithm is programmed to match that from SHAKE2000. The theory behind
+    The algorithm matches the RS results from SHAKE2000. The theory behind
     the algorithm assumes a 'segmentally-linear' acceleration time history (TH).
     Hence, the implicit assumption is that the time history nyquist frequency is
     much higher than the highest frequency within the TH.
 
-    Use the `fft_resp_spect` method if there is frequency content close to the
+    Use the `_fft_rs` method if there is frequency content close to the
     nyquist frequency. Or, use `scipy.signal.resample` to up-sample the acc. TH
-    prior to using `step_resp_spect`.
-
-    Output frequencies are loglinearly spaced as follows:
-        - [0.1Hz, 1Hz] : 12 points
-        - [1Hz, 10Hz] : 50 points
-        - [10Hz, 100Hz] : 25 points
-        - [100Hz, 1000Hz] : 15 points (only if `ext` is True)
+    prior to using `_step_rs`.
 
     Parameters
     ----------
-    acc : 1D ArrayLike
-        Input acceleration time history (assumed to be in g's).
-
-    time_a : 1D ArrayLike
-        Input time values for the acceleration time history, `acc`.
-
+    acc : 1d array_like
+        Input 1D acceleration time history.
+    time : 1d array_like
+        Input 1D time values for the acceleration time history, `acc`.
+    frqs : 1d array_like
+        1D array of frequencies where the response is calculated.
     zeta : float, optional
-        Critical damping ratio (dimensionless). Defaults to 0.05.
-
-    ext : bool, optional
-        Defines whether the RS is calculated to 100Hz or 1000Hz. Defaults
-        to True.
-            - ext = True : Frequency range is [0.1Hz, 1000Hz]
-            - ext = False : Frequency range is [0.1Hz - 100Hz]
+        Critical damping ratio (dimensionless). Defaults to 0.05. Should be between 0
+        and 1.
 
     Returns
     -------
     rs : ndarray
         Array with spectral accelerations (same units as input acc).
 
-    frq : ndarray
+    frqs : ndarray
         Array with frequencies in Hz.
 
     References
@@ -199,23 +191,15 @@ def step_resp_spect(
         Society of America. Vol 59, no. 2.
     """
 
-    t0 = perf_counter()
-
-    # Set up list of frequencies on which to calculate response spectra:
-    frq = np.logspace(-1, 0, num=12, endpoint=False)
-    frq = np.append(frq, np.logspace(0, 1, num=50, endpoint=False))
-    if ext:
-        frq = np.append(frq, np.logspace(1, 2, num=25, endpoint=False))
-        frq = np.append(frq, np.logspace(2, 3, num=15, endpoint=True))
-    else:
-        frq = np.append(frq, np.logspace(1, 2, num=25, endpoint=True))
+    # Enforce ndarray type
+    frqs = np.array(frqs)
 
     # Instantiate angular frequency and spectral acceleration arrays
-    w = frq * 2 * np.pi
+    w = frqs * 2 * np.pi
     rs = 0 * w
 
     # Define timestep from input signal
-    dt = time_a[1] - time_a[0]
+    dt = time[1] - time[0]
 
     # Calculate response for a spring with each wn
     for k, wn in enumerate(w):
@@ -224,7 +208,7 @@ def step_resp_spect(
         A, B = _get_step_matrix(wn, zeta, dt)
 
         # Define utility function to be used with itertools.accumulate
-        def func(x_i: ArrayLike, a_i: ArrayLike) -> np.ndarray:
+        def func(x_i: array_like_1d, a_i: array_like_1d) -> np.ndarray:
             return np.dot(A, x_i) + np.dot(B, a_i)
 
         act = np.column_stack((acc[:-1], acc[1:]))
@@ -234,74 +218,47 @@ def step_resp_spect(
         z = np.dot(x, temp)
         rs[k] = np.max(np.absolute(z))
 
-    t1 = perf_counter()
-    t_net = t1 - t0
-
-    print(
-        "RS done. Time taken = {:.5f}s".format(t_net),
-        "\ntime per iteration = {:.5f}s".format(t_net / len(w)),
-    )
-
-    return rs, frq
+    return rs, frqs
 
 
-def fft_resp_spect(
-    acc: ArrayLike, time_a: ArrayLike, zeta: float = 0.05, ext: bool = True,
-) -> Tuple[np.ndarray, np.ndarray]:
+def _fft_rs(
+    acc: array_like_1d, time: array_like_1d, frqs: array_like_1d, zeta: float = 0.05,
+) -> [np.ndarray, np.ndarray]:
     """Generate acceleration response spectrum using a frequency domain
-    method. This is physically accurate if the true acceleration time
-    history has no frequency content higher than the nyquist frequency
-    of the input acceleration.
-
-    Output frequencies are loglinearly spaced as follows:
-        - [0.1Hz, 1Hz] : 30 points
-        - [1Hz, 10Hz] : 50 points
-        - [10Hz, 100Hz] : 50 points
-        - [100Hz, 1000Hz] : 30 points (only if `ext` is True)
+    method at the given frequencies. This is physically accurate if the true
+    acceleration time history has no frequency content higher than the nyquist
+    frequency of the input acceleration.
 
     Parameters
     ----------
-    acc : 1D ArrayLike
-        Input acceleration time history (assumed to be in g's).
-
-    time_a : 1D ArrayLike
-        Input time values for the acceleration time history, `acc`.
-
+    acc : 1d array_like
+        Input 1D acceleration time history.
+    time : 1d array_like
+        Input 1D time values for the acceleration time history, `acc`.
+    frqs : 1d array_like
+        1D array of frequencies where the response is calculated.
     zeta : float, optional
-        Critical damping ratio (dimensionless). Defaults to 0.05.
-
-    ext : bool, optional
-        Defines whether the RS is calculated to 100Hz or 1000Hz. Defaults
-        to True.
-            - ext = True : Frequency range is [0.1Hz, 1000Hz]
-            - ext = False : Frequency range is [0.1Hz - 100Hz]
+        Critical damping ratio (dimensionless). Defaults to 0.05. Should be between 0
+        and 1.
 
     Returns
     -------
-    rs : 1D ndarray
+    rs : ndarray
         Array with spectral accelerations (same units as input acc).
 
-    frq : 1D ndarray
-        Array with frequencies in Hz.
+    frqs : ndarray
+        Array with frequencies in Hz. Same as `frequencies`.
     """
 
-    t0 = perf_counter()
-
-    # Set up list of frequencies on which to calculate response spectra:
-    frq = np.logspace(-1, 0, num=30, endpoint=False)
-    frq = np.append(frq, np.logspace(0, 1, num=50, endpoint=False))
-    if ext:
-        frq = np.append(frq, np.logspace(1, 2, num=50, endpoint=False))
-        frq = np.append(frq, np.logspace(2, 3, num=30, endpoint=True))
-    else:
-        frq = np.append(frq, np.logspace(1, 2, num=50, endpoint=True))
+    # Enforce ndarray type
+    frqs = np.array(frqs)
 
     # Instantiate angular frequency and spectral acceleration arrays
-    w = frq * 2 * np.pi
+    w = frqs * 2 * np.pi
     rs = 0 * w
 
     # Define minimum timestep from input signal
-    dt_min = time_a[1] - time_a[0]
+    dt_min = time[1] - time[0]
 
     # Calculate n, the integer to determine 0 padding at the end
     # of the time history; making n a power of 2 improves the
@@ -340,12 +297,50 @@ def fft_resp_spect(
         # Peak absolute acceleration of spring mass
         rs[k] = np.max(np.absolute(a))
 
+    return rs, frqs
+
+
+# %% Global Variables
+
+# Constant that defines the available RS generation algorithms.
+RS_METHODS = {
+    "fft": _fft_rs,
+    "shake": _step_rs,
+}
+
+DEFAULT_METHOD = "fft"
+
+
+# %% Public RS generation functions
+
+
+def response_spectrum(
+    acc: array_like_1d,
+    time: array_like_1d,
+    zeta: float = 0.05,
+    high_frequency: bool = False,
+    method=DEFAULT_METHOD,
+    # additional_frequencies: Optional[array_like_1d] = None,
+) -> [np.ndarray, np.ndarray]:
+
+    rs_func = RS_METHODS.get(method, RS_METHODS[DEFAULT_METHOD])
+
+    # Start timer
+    t0 = perf_counter()
+
+    # Get array of frequencies for RS calculation
+    frqs = get_default_frequencies(high_frequency=high_frequency)
+
+    # Run RS algorithm
+    rs, _ = rs_func(acc, time, frqs, zeta)
+
+    # End timer and print timing info
     t1 = perf_counter()
     t_net = t1 - t0
 
     print(
         "RS done. Time taken = {:.5f}s".format(t_net),
-        "\ntime per iteration = {:.5f}s".format(t_net / len(w)),
+        "\ntime per iteration = {:.5f}s".format(t_net / len(frqs)),
     )
 
-    return rs, frq
+    return rs, frqs
