@@ -1,0 +1,507 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="autoRS" href="modules.html" />
+
+    <meta name="generator" content="sphinx-4.1.2, furo 2021.07.31.beta41"/>
+        <title>autoRS package - autoRS documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=daa650a7760fac3eee23aa959745d2c866b74cb3" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=93475b62d1c3bc01323a0eefdc14a62d77b12690" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  body[data-theme="dark"] {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+</style>
+    <link media="(prefers-color-scheme: dark)" rel="stylesheet" href="_static/pygments_dark.css"></head>
+  <body>
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" />
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">autoRS  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">autoRS  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="modules.html">autoRS</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">autoRS package</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <article role="main">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <section id="autors-package">
+<h1>autoRS package<a class="headerlink" href="#autors-package" title="Permalink to this headline">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-autoRS.rw">
+<span id="autors-rw-module"></span><h2>autoRS.rw module<a class="headerlink" href="#module-autoRS.rw" title="Permalink to this headline">¶</a></h2>
+<p>Custom file read functions.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.rw.read_csv_multi">
+<span class="sig-prename descclassname"><span class="pre">autoRS.rw.</span></span><span class="sig-name descname"><span class="pre">read_csv_multi</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#autoRS.rw.read_csv_multi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads .csv files with multiple columns.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>filename</strong><span class="classifier">str</span></dt><dd><p>Address of .csv file with filename.</p>
+</dd>
+<dt><strong>header</strong><span class="classifier">int, optional</span></dt><dd><p>Number of lines to skip at the start of the file.
+Should be an integer greater than 0. Defaults to 2.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>tm</strong><span class="classifier">1D List[float]</span></dt><dd><p>List of abscissa values from the file.</p>
+</dd>
+<dt><strong>acc</strong><span class="classifier">List[List[float]]</span></dt><dd><p>2D List of ordinate values from the file. Values from each
+abscissa column of the csv file are contained in a separate list
+within <cite>acc</cite>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.rw.read_dmd_acc">
+<span class="sig-prename descclassname"><span class="pre">autoRS.rw.</span></span><span class="sig-name descname"><span class="pre">read_dmd_acc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#autoRS.rw.read_dmd_acc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read surface and base time histories from D-MOD .acc file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>filename</strong><span class="classifier">str</span></dt><dd><p>Address of .acc file with filename.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>acc_surf</strong><span class="classifier">List[float]</span></dt><dd><p>List of acceleration values of the surface (1st layer) time history.</p>
+</dd>
+<dt><strong>acc_base</strong><span class="classifier">List[float]</span></dt><dd><p>List of acceleration values of the base (last layer) time history.</p>
+</dd>
+<dt><strong>tstep</strong><span class="classifier">float</span></dt><dd><p>Timestep value</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.rw.read_fort_txt">
+<span class="sig-prename descclassname"><span class="pre">autoRS.rw.</span></span><span class="sig-name descname"><span class="pre">read_fort_txt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dgts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#autoRS.rw.read_fort_txt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract time histories from text files in fortran format.</p>
+<p>Defaults to ‘8F9.6’ format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>filename</strong><span class="classifier">str</span></dt><dd><p>Address of file with filename and extension.</p>
+</dd>
+<dt><strong>header</strong><span class="classifier">int, optional</span></dt><dd><p>Number of lines to skip at the start of the file.
+Should be an integer greater than 0. Defaults to 8.</p>
+</dd>
+<dt><strong>cols</strong><span class="classifier">int, optional</span></dt><dd><p>Number of columns in fortran format.
+Should be an integer greater than 0. Defaults to 8.</p>
+</dd>
+<dt><strong>dgts</strong><span class="classifier">int, optional</span></dt><dd><p>Number of digits per value in fortran format.
+Should be an integer greater than 0. Defaults to 9.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>acc</strong><span class="classifier">List[float]</span></dt><dd><p>List of values from the file.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.rw.read_peer_record">
+<span class="sig-prename descclassname"><span class="pre">autoRS.rw.</span></span><span class="sig-name descname"><span class="pre">read_peer_record</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#autoRS.rw.read_peer_record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read time history file from PEER Strong Motion Record Database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>filename</strong><span class="classifier">str</span></dt><dd><p>Address of file with filename and extension.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>eq_record</strong><span class="classifier">dict</span></dt><dd><p>Dictionary with the Peer TH properties.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.rw.read_shk_ahl">
+<span class="sig-prename descclassname"><span class="pre">autoRS.rw.</span></span><span class="sig-name descname"><span class="pre">read_shk_ahl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#autoRS.rw.read_shk_ahl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read SHAKE .ahl time history output files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>filename</strong><span class="classifier">str</span></dt><dd><p>Address of .ahl file with filename.</p>
+</dd>
+<dt><strong>header</strong><span class="classifier">int, optional</span></dt><dd><p>Number of lines to skip at the start of the file.
+Should be an integer greater than 0. Defaults to 3.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>ahl</strong><span class="classifier">List[float]</span></dt><dd><p>List of acceleration values from the .ahl file.</p>
+</dd>
+<dt><strong>dt</strong><span class="classifier">float</span></dt><dd><p>Timestep value</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+</section>
+<section id="module-autoRS.spectrum">
+<span id="autors-spectrum-module"></span><h2>autoRS.spectrum module<a class="headerlink" href="#module-autoRS.spectrum" title="Permalink to this headline">¶</a></h2>
+<p>Response Spectra generation functions.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.spectrum.get_asme_frequencies">
+<span class="sig-prename descclassname"><span class="pre">autoRS.spectrum.</span></span><span class="sig-name descname"><span class="pre">get_asme_frequencies</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#autoRS.spectrum.get_asme_frequencies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates array of frequencies (Hz) for spectral generation as specified
+in ASME B&amp;PVC Division I, Section III, Non-mandatory appendix N, Table
+N-1226-1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>np.ndarray: Array of frequency points (Hz).</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.spectrum.get_default_frequencies">
+<span class="sig-prename descclassname"><span class="pre">autoRS.spectrum.</span></span><span class="sig-name descname"><span class="pre">get_default_frequencies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">high_frequency</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#autoRS.spectrum.get_default_frequencies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates default array of frequencies (Hz), with 100 total points if the range
+is from [0.1Hz, 100Hz], or 115 total points if the range is [0.1Hz, 1000Hz].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>high_frequency: bool</strong></dt><dd><p>If false (default), frequency range is 100 points in [0.1Hz, 100Hz].
+If true, frequency range is 115 total points in [0.1Hz, 1000Hz].</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>np.ndarray: Array of frequency points (Hz).</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.spectrum.response_spectrum">
+<span class="sig-prename descclassname"><span class="pre">autoRS.spectrum.</span></span><span class="sig-name descname"><span class="pre">response_spectrum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">acc</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">array_like_1d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">array_like_1d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zeta</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high_frequency</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fft'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="p"><span class="pre">[</span></span><span class="pre">np.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">np.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#autoRS.spectrum.response_spectrum" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>acc</strong></dt><dd></dd>
+<dt><strong>time</strong></dt><dd></dd>
+<dt><strong>zeta</strong></dt><dd></dd>
+<dt><strong>high_frequency</strong></dt><dd></dd>
+<dt><strong>method</strong></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+</section>
+<section id="module-autoRS">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-autoRS" title="Permalink to this headline">¶</a></h2>
+<p>Main controller and entry point for the autoRS package.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.generate_rs">
+<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">generate_rs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#autoRS.generate_rs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overall program logic:</p>
+<ul class="simple">
+<li><p>Detects settings in the default settings file (<cite>SETTINGS_FNAME</cite>).</p></li>
+<li><p>Generate RS for all valid TH files in the target directory listed in the settings
+file.</p></li>
+</ul>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.generate_rs_from_ahl">
+<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">generate_rs_from_ahl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">th_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rs_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#autoRS.generate_rs_from_ahl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read .ahl time history from <cite>th_path</cite>. Generate the RS. Write to <cite>rs_path</cite>.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.generate_rs_from_csv">
+<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">generate_rs_from_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">th_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rs_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#autoRS.generate_rs_from_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read .csv time history(s) from <cite>th_path</cite>. Generate the RS.
+Write to <cite>rs_path</cite>.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.get_TH_file_list">
+<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">get_TH_file_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#autoRS.get_TH_file_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the list of .csv and .ahl time history files to process.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.get_data_paths">
+<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">get_data_paths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">th_folder</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#autoRS.get_data_paths" title="Permalink to this definition">¶</a></dt>
+<dd><p>For a given folder path with time histories, return all time history files and
+generate prospective RS files.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.get_output_header_string">
+<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">get_output_header_string</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#autoRS.get_output_header_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate header string for output Response Spectra output files.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.get_settings">
+<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">get_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'RS_settings.txt'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#autoRS.get_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the settings file (assuming it exists) and set up the settings
+dictionary.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.main">
+<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#autoRS.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main function to run upon opening module or exe file.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.make_RS_folder">
+<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">make_RS_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#autoRS.make_RS_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make RS folder at given path (if it does not exist already).
+Returns the final RS directory.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.process_settings">
+<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">process_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_settings</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#autoRS.process_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a raw settings dictionary, update the program settings. Use default values
+in case of invalid raw setting definitions.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.write_default_settings">
+<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">write_default_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'RS_settings.txt'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#autoRS.write_default_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write default settings file.</p>
+</dd></dl>
+</section>
+</section>
+
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          
+          <a class="prev-page" href="modules.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">autoRS</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2021, Praveer Nidamaluri
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            |
+            <a class="muted-link" href="_sources/autoRS.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">autoRS package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-autoRS.rw">autoRS.rw module</a></li>
+<li><a class="reference internal" href="#module-autoRS.spectrum">autoRS.spectrum module</a></li>
+<li><a class="reference internal" href="#module-autoRS">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/scripts/main.js"></script>
+    </body>
+</html>
