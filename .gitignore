@@ -14,11 +14,11 @@ tests/results.txt
 
 # Pyinstaller files
 *.spec
-build/
+/build/
 
 # Sphinx files
 docs/*/_static
-docs/*/build
+# docs/*/build
 docs/*/_templates
 
 # Experiment files/folders

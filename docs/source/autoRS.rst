@@ -4,18 +4,18 @@ autoRS package
 Submodules
 ----------
 
-autoRS.resp\_spect module
--------------------------
-
-.. automodule:: autoRS.resp_spect
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 autoRS.rw module
 ----------------
 
 .. automodule:: autoRS.rw
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+autoRS.spectrum module
+----------------------
+
+.. automodule:: autoRS.spectrum
    :members:
    :undoc-members:
    :show-inheritance:

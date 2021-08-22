@@ -41,9 +41,7 @@ Contents
 .. toctree::
    :maxdepth: 2
 
-   autoRS
-   autoRS.resp_spect
-   autoRS.rw
+   modules
 
 
 Indices and tables

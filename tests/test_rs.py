@@ -1,4 +1,4 @@
-"""Unit tests for autoRS.resp_spect."""
+"""Unit tests for autoRS.spectrum."""
 
 # Standard library imports
 import unittest

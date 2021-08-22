@@ -19,7 +19,7 @@ from autoRS.rw import read_shk_ahl
 SETTINGS_FNAME: str = "RS_settings.txt"
 DATE: str = "July 26 2021"
 ALLOWED_SETTING_KEYS: Tuple[str, ...] = ("folder", "zeta", "ext", "method")
-AVAILABLE_METHODS: Tuple[str, ...] = tuple(RS_METHODS.keys())
+AVAILABLE_METHODS: Tuple[str, ...] = tuple(RS_METHODS)
 DEFAULT_SETTINGS = {
     "folder": ".",
     "zeta": 0.05,
@@ -229,9 +229,10 @@ def get_data_paths(th_folder: str) -> Tuple[List[str], List[str]]:
 
 def generate_rs() -> None:
     """Overall program logic:
-    -   Detects settings in the default settings file (`SETTINGS_FNAME`).
-    -   Generate RS for all valid TH files in the target directory listed in
-        the settings file.
+
+    - Detects settings in the default settings file (`SETTINGS_FNAME`).
+    - Generate RS for all valid TH files in the target directory listed in the settings
+      file.
     """
 
     print("AutoRS", f"{DATE}\n", sep="\n")

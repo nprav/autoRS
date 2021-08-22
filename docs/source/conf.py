@@ -35,6 +35,11 @@ extensions = [
     "sphinx.ext.autodoc",
 ]
 
+# Autodoc type aliases
+autodoc_type_aliases = {
+    "array_like_1d": "autoRS.spectrum.array_like_1d",
+}
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
@@ -53,7 +58,7 @@ html_theme = "furo"
 
 # html theme options
 html_theme_options = {
-    "body_text": "#00034d",
+    # "body_text": "#00034d",
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,

@@ -78,6 +78,7 @@ class TestMain(unittest.TestCase):
         th_path = os.path.join("test_resources", "single_col_w_comma.csv",)
         rs_path = os.path.join("test_resources", "RS", "test3.csv",)
         autoRS.generate_rs_from_csv(th_path, rs_path)
+        self.assertTrue(os.path.isfile(rs_path))
 
         th_path = os.path.join("test_resources", "single_col_wo_comma.csv",)
         rs_path = os.path.join("test_resources", "RS", "test4.csv",)

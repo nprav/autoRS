@@ -3,6 +3,7 @@
 # %% Import Necessary Modules
 
 # Standard library imports
+from __future__ import annotations
 from time import perf_counter
 from itertools import accumulate
 from typing import Tuple, Union, List
@@ -180,7 +181,6 @@ def _step_rs(
     -------
     rs : ndarray
         Array with spectral accelerations (same units as input acc).
-
     frqs : ndarray
         Array with frequencies in Hz.
 
@@ -245,7 +245,6 @@ def _fft_rs(
     -------
     rs : ndarray
         Array with spectral accelerations (same units as input acc).
-
     frqs : ndarray
         Array with frequencies in Hz. Same as `frequencies`.
     """
@@ -303,10 +302,12 @@ def _fft_rs(
 # %% Global Variables
 
 # Constant that defines the available RS generation algorithms.
-RS_METHODS = {
+RS_METHODS_DICT = {
     "fft": _fft_rs,
     "shake": _step_rs,
 }
+
+RS_METHODS = tuple(RS_METHODS_DICT.keys())
 
 DEFAULT_METHOD = "fft"
 
@@ -321,9 +322,34 @@ def response_spectrum(
     high_frequency: bool = False,
     method=DEFAULT_METHOD,
     # additional_frequencies: Optional[array_like_1d] = None,
+    # verbose = True,
 ) -> [np.ndarray, np.ndarray]:
+    """Generate acceleration response spectrum (RS) using one of the vailable methods.
 
-    rs_func = RS_METHODS.get(method, RS_METHODS[DEFAULT_METHOD])
+    Parameters
+    ----------
+    acc : 1d array_like
+        Input 1D acceleration time history.
+    time : 1d array_like
+        Input 1D time values for the acceleration time history, `acc`.
+    zeta : float, optional, defalut = 0.05
+        Critical damping ratio (dimensionless). Defaults to 0.05. Should be between 0
+        and 1.
+    high_frequency : bool, optional, default = False
+        Boolean that determines frequency range of RS. If false, the range is
+        [0.1Hz, 100Hz]. If true, the range is [0.1Hz, 1000Hz].
+    method : str, optional, default = `DEFAULT_METHOD`
+        The RS method to be used. See `RS_METHODS`.
+
+    Returns
+    -------
+    rs : ndarray
+        Array with spectral accelerations (same units as input acc).
+    frqs : ndarray
+        Array with frequencies in Hz.
+    """
+
+    rs_func = RS_METHODS_DICT.get(method, RS_METHODS_DICT[DEFAULT_METHOD])
 
     # Start timer
     t0 = perf_counter()
