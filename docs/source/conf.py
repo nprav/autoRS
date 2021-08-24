@@ -35,10 +35,13 @@ extensions = [
     "sphinx.ext.autodoc",
 ]
 
-# Autodoc type aliases
+# Autodoc configuration settings
 autodoc_type_aliases = {
     "array_like_1d": "autoRS.spectrum.array_like_1d",
+    "numeric": "autoRS.spectrum.numeric",
 }
+
+autodoc_member_order = "groupwise"
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]

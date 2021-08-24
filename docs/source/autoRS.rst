@@ -1,6 +1,12 @@
 autoRS package
 ==============
 
+.. automodule:: autoRS
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
 Submodules
 ----------
 
@@ -19,11 +25,4 @@ autoRS.spectrum module
    :members:
    :undoc-members:
    :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: autoRS
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   :private-members: _step_rs, _fft_rs

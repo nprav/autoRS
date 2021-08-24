@@ -184,6 +184,89 @@
         </div>
         <section id="autors-package">
 <h1>autoRS package<a class="headerlink" href="#autors-package" title="Permalink to this headline">¶</a></h1>
+<dl class="py data">
+<dt class="sig sig-object py" id="autoRS.SETTINGS_FNAME">
+<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">SETTINGS_FNAME</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><em class="property"> <span class="pre">=</span> <span class="pre">'RS_settings.txt'</span></em><a class="headerlink" href="#autoRS.SETTINGS_FNAME" title="Permalink to this definition">¶</a></dt>
+<dd><p>str(object=’’) -&gt; str
+str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
+<p>Create a new string object from the given object. If encoding or
+errors is specified, then the object must expose a data buffer
+that will be decoded using the given encoding and error handler.
+Otherwise, returns the result of object.__str__() (if defined)
+or repr(object).
+encoding defaults to sys.getdefaultencoding().
+errors defaults to ‘strict’.</p>
+</dd></dl>
+<dl class="py data">
+<dt class="sig sig-object py" id="autoRS.DEFAULT_SETTINGS">
+<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">DEFAULT_SETTINGS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">{'ext':</span> <span class="pre">False,</span> <span class="pre">'folder':</span> <span class="pre">'.',</span> <span class="pre">'method':</span> <span class="pre">'fft',</span> <span class="pre">'zeta':</span> <span class="pre">0.05}</span></em><a class="headerlink" href="#autoRS.DEFAULT_SETTINGS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+<span class="target" id="module-autoRS"></span><p>Main controller and entry point for the autoRS package.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.generate_rs">
+<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">generate_rs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#autoRS.generate_rs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overall program logic:</p>
+<ul class="simple">
+<li><p>Detects settings in the default settings file (<cite>SETTINGS_FNAME</cite>).</p></li>
+<li><p>Generate RS for all valid TH files in the target directory listed in the settings
+file.</p></li>
+</ul>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.generate_rs_from_ahl">
+<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">generate_rs_from_ahl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">th_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rs_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#autoRS.generate_rs_from_ahl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read .ahl time history from <cite>th_path</cite>. Generate the RS. Write to <cite>rs_path</cite>.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.generate_rs_from_csv">
+<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">generate_rs_from_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">th_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rs_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#autoRS.generate_rs_from_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read .csv time history(s) from <cite>th_path</cite>. Generate the RS.
+Write to <cite>rs_path</cite>.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.get_TH_file_list">
+<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">get_TH_file_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#autoRS.get_TH_file_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the list of .csv and .ahl time history files to process.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.get_data_paths">
+<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">get_data_paths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">th_folder</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#autoRS.get_data_paths" title="Permalink to this definition">¶</a></dt>
+<dd><p>For a given folder path with time histories, return all time history files and
+generate prospective RS files.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.get_output_header_string">
+<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">get_output_header_string</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#autoRS.get_output_header_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate header string for output Response Spectra output files.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.get_settings">
+<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">get_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'RS_settings.txt'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#autoRS.get_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the settings file (assuming it exists) and set up the settings
+dictionary.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.main">
+<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#autoRS.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main function to run upon opening module or exe file.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.make_RS_folder">
+<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">make_RS_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#autoRS.make_RS_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make RS folder at given path (if it does not exist already).
+Returns the final RS directory.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.process_settings">
+<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">process_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_settings</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#autoRS.process_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a raw settings dictionary, update the program settings. Use default values
+in case of invalid raw setting definitions.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.write_default_settings">
+<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">write_default_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'RS_settings.txt'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#autoRS.write_default_settings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write default settings file.</p>
+</dd></dl>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </section>
@@ -316,6 +399,80 @@ Should be an integer greater than 0. Defaults to 3.</p>
 <span id="autors-spectrum-module"></span><h2>autoRS.spectrum module<a class="headerlink" href="#module-autoRS.spectrum" title="Permalink to this headline">¶</a></h2>
 <p>Response Spectra generation functions.</p>
 <dl class="py function">
+<dt class="sig sig-object py" id="autoRS.spectrum._fft_rs">
+<span class="sig-prename descclassname"><span class="pre">autoRS.spectrum.</span></span><span class="sig-name descname"><span class="pre">_fft_rs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">acc</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#autoRS.spectrum.array_like_1d" title="autoRS.spectrum.array_like_1d"><span class="pre">array_like_1d</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#autoRS.spectrum.array_like_1d" title="autoRS.spectrum.array_like_1d"><span class="pre">array_like_1d</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">frqs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#autoRS.spectrum.array_like_1d" title="autoRS.spectrum.array_like_1d"><span class="pre">array_like_1d</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">zeta</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="p"><span class="pre">[</span></span><span class="pre">np.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">np.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#autoRS.spectrum._fft_rs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate acceleration response spectrum using a frequency domain
+method at the given frequencies. This is physically accurate if the true
+acceleration time history has no frequency content higher than the nyquist
+frequency of the input acceleration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>acc</strong><span class="classifier">1d array_like</span></dt><dd><p>Input 1D acceleration time history.</p>
+</dd>
+<dt><strong>time</strong><span class="classifier">1d array_like</span></dt><dd><p>Input 1D time values for the acceleration time history, <cite>acc</cite>.</p>
+</dd>
+<dt><strong>frqs</strong><span class="classifier">1d array_like</span></dt><dd><p>1D array of frequencies where the response is calculated.</p>
+</dd>
+<dt><strong>zeta</strong><span class="classifier">float, optional</span></dt><dd><p>Critical damping ratio (dimensionless). Defaults to 0.05. Should be between 0
+and 1.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>rs</strong><span class="classifier">ndarray</span></dt><dd><p>Array with spectral accelerations (same units as input acc).</p>
+</dd>
+<dt><strong>frqs</strong><span class="classifier">ndarray</span></dt><dd><p>Array with frequencies in Hz. Same as <cite>frequencies</cite>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="autoRS.spectrum._step_rs">
+<span class="sig-prename descclassname"><span class="pre">autoRS.spectrum.</span></span><span class="sig-name descname"><span class="pre">_step_rs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">acc</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#autoRS.spectrum.array_like_1d" title="autoRS.spectrum.array_like_1d"><span class="pre">array_like_1d</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#autoRS.spectrum.array_like_1d" title="autoRS.spectrum.array_like_1d"><span class="pre">array_like_1d</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">frqs</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#autoRS.spectrum.array_like_1d" title="autoRS.spectrum.array_like_1d"><span class="pre">array_like_1d</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">zeta</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="p"><span class="pre">[</span></span><span class="pre">np.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">np.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#autoRS.spectrum._step_rs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate acceleration response spectrum by the step-by-step method [1].
+The algorithm matches the RS results from SHAKE2000. The theory behind
+the algorithm assumes a ‘segmentally-linear’ acceleration time history (TH).
+Hence, the implicit assumption is that the time history sampling frequency is
+much higher (&gt;8x) than the highest frequency within the TH.</p>
+<p>Use the <cite>_fft_rs</cite> method if there is frequency content close to the
+nyquist frequency. Or, use <cite>scipy.signal.resample</cite> to up-sample the acc. TH
+prior to using <cite>_step_rs</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>acc</strong><span class="classifier">1d array_like</span></dt><dd><p>Input 1D acceleration time history.</p>
+</dd>
+<dt><strong>time</strong><span class="classifier">1d array_like</span></dt><dd><p>Input 1D time values for the acceleration time history, <cite>acc</cite>.</p>
+</dd>
+<dt><strong>frqs</strong><span class="classifier">1d array_like</span></dt><dd><p>1D array of frequencies where the response is calculated.</p>
+</dd>
+<dt><strong>zeta</strong><span class="classifier">float, optional</span></dt><dd><p>Critical damping ratio (dimensionless). Defaults to 0.05. Should be between 0
+and 1.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>rs</strong><span class="classifier">ndarray</span></dt><dd><p>Array with spectral accelerations (same units as input acc).</p>
+</dd>
+<dt><strong>frqs</strong><span class="classifier">ndarray</span></dt><dd><p>Array with frequencies in Hz.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="r115858cbd45b-1"><span class="brackets">1</span></dt>
+<dd><p>Nigam, Jennings, April 1969. Calculation of response Spectra
+from Strong-Motion Earthquake Records. Bulletin of the Seismological
+Society of America. Vol 59, no. 2.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
 <dt class="sig sig-object py" id="autoRS.spectrum.get_asme_frequencies">
 <span class="sig-prename descclassname"><span class="pre">autoRS.spectrum.</span></span><span class="sig-name descname"><span class="pre">get_asme_frequencies</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#autoRS.spectrum.get_asme_frequencies" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates array of frequencies (Hz) for spectral generation as specified
@@ -351,87 +508,58 @@ If true, frequency range is 115 total points in [0.1Hz, 1000Hz].</p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="autoRS.spectrum.response_spectrum">
-<span class="sig-prename descclassname"><span class="pre">autoRS.spectrum.</span></span><span class="sig-name descname"><span class="pre">response_spectrum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">acc</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">array_like_1d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">array_like_1d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zeta</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high_frequency</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fft'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="p"><span class="pre">[</span></span><span class="pre">np.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">np.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#autoRS.spectrum.response_spectrum" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
+<span class="sig-prename descclassname"><span class="pre">autoRS.spectrum.</span></span><span class="sig-name descname"><span class="pre">response_spectrum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">acc</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#autoRS.spectrum.array_like_1d" title="autoRS.spectrum.array_like_1d"><span class="pre">array_like_1d</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#autoRS.spectrum.array_like_1d" title="autoRS.spectrum.array_like_1d"><span class="pre">array_like_1d</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">zeta</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high_frequency</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'fft'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="p"><span class="pre">[</span></span><span class="pre">np.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">np.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#autoRS.spectrum.response_spectrum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate acceleration response spectrum (RS) using one of the vailable methods.</p>
+<dl class="field-list">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>acc</strong></dt><dd></dd>
-<dt><strong>time</strong></dt><dd></dd>
-<dt><strong>zeta</strong></dt><dd></dd>
-<dt><strong>high_frequency</strong></dt><dd></dd>
-<dt><strong>method</strong></dt><dd></dd>
+<dd class="field-odd"><dl>
+<dt><strong>acc</strong><span class="classifier">1d array_like</span></dt><dd><p>Input 1D acceleration time history.</p>
+</dd>
+<dt><strong>time</strong><span class="classifier">1d array_like</span></dt><dd><p>Input 1D time values for the acceleration time history, <cite>acc</cite>.</p>
+</dd>
+<dt><strong>zeta</strong><span class="classifier">float, optional, default = 0.05</span></dt><dd><p>Critical damping ratio (dimensionless). Defaults to 0.05. Should be between 0
+and 1.</p>
+</dd>
+<dt><strong>high_frequency</strong><span class="classifier">bool, optional, default = False</span></dt><dd><p>Boolean that determines frequency range of RS. If false, the range is
+[0.1Hz, 100Hz]. If true, the range is [0.1Hz, 1000Hz].</p>
+</dd>
+<dt><strong>method</strong><span class="classifier">str, optional, default = <cite>DEFAULT_METHOD</cite></span></dt><dd><p>The RS method to be used. See <cite>RS_METHODS</cite>. The ‘fft’ default method is more
+accurate and generally faster. The ‘shake’ step-by-step method is a common
+implementation in industry (eg. SHAKE2000). Results may vary on average by &lt;1%
+provided the signal sampling frequency is &gt; 8 x the highest frequency content.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>rs</strong><span class="classifier">ndarray</span></dt><dd><p>Array with spectral accelerations (same units as input acc).</p>
+</dd>
+<dt><strong>frqs</strong><span class="classifier">ndarray</span></dt><dd><p>Array with frequencies in Hz.</p>
+</dd>
 </dl>
 </dd>
 </dl>
 </dd></dl>
-</section>
-<section id="module-autoRS">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-autoRS" title="Permalink to this headline">¶</a></h2>
-<p>Main controller and entry point for the autoRS package.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="autoRS.generate_rs">
-<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">generate_rs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#autoRS.generate_rs" title="Permalink to this definition">¶</a></dt>
-<dd><p>Overall program logic:</p>
-<ul class="simple">
-<li><p>Detects settings in the default settings file (<cite>SETTINGS_FNAME</cite>).</p></li>
-<li><p>Generate RS for all valid TH files in the target directory listed in the settings
-file.</p></li>
-</ul>
+<dl class="py data">
+<dt class="sig sig-object py" id="autoRS.spectrum.DEFAULT_METHOD">
+<span class="sig-prename descclassname"><span class="pre">autoRS.spectrum.</span></span><span class="sig-name descname"><span class="pre">DEFAULT_METHOD</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'fft'</span></em><a class="headerlink" href="#autoRS.spectrum.DEFAULT_METHOD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default RS algorithm method.</p>
 </dd></dl>
-<dl class="py function">
-<dt class="sig sig-object py" id="autoRS.generate_rs_from_ahl">
-<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">generate_rs_from_ahl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">th_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rs_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#autoRS.generate_rs_from_ahl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read .ahl time history from <cite>th_path</cite>. Generate the RS. Write to <cite>rs_path</cite>.</p>
+<dl class="py data">
+<dt class="sig sig-object py" id="autoRS.spectrum.RS_METHODS">
+<span class="sig-prename descclassname"><span class="pre">autoRS.spectrum.</span></span><span class="sig-name descname"><span class="pre">RS_METHODS</span></span><em class="property"> <span class="pre">=</span> <span class="pre">('fft',</span> <span class="pre">'shake')</span></em><a class="headerlink" href="#autoRS.spectrum.RS_METHODS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tuple that lists the available RS generation algorithms.</p>
 </dd></dl>
-<dl class="py function">
-<dt class="sig sig-object py" id="autoRS.generate_rs_from_csv">
-<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">generate_rs_from_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">th_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rs_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#autoRS.generate_rs_from_csv" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read .csv time history(s) from <cite>th_path</cite>. Generate the RS.
-Write to <cite>rs_path</cite>.</p>
+<dl class="py data">
+<dt class="sig sig-object py" id="autoRS.spectrum.RS_METHODS_DICT">
+<span class="sig-prename descclassname"><span class="pre">autoRS.spectrum.</span></span><span class="sig-name descname"><span class="pre">RS_METHODS_DICT</span></span><em class="property"> <span class="pre">=</span> <span class="pre">{'fft':</span> <span class="pre">&lt;function</span> <span class="pre">_fft_rs&gt;,</span> <span class="pre">'shake':</span> <span class="pre">&lt;function</span> <span class="pre">_step_rs&gt;}</span></em><a class="headerlink" href="#autoRS.spectrum.RS_METHODS_DICT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary that provides access to the available RS generation algorithms.</p>
 </dd></dl>
-<dl class="py function">
-<dt class="sig sig-object py" id="autoRS.get_TH_file_list">
-<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">get_TH_file_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#autoRS.get_TH_file_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the list of .csv and .ahl time history files to process.</p>
-</dd></dl>
-<dl class="py function">
-<dt class="sig sig-object py" id="autoRS.get_data_paths">
-<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">get_data_paths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">th_folder</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#autoRS.get_data_paths" title="Permalink to this definition">¶</a></dt>
-<dd><p>For a given folder path with time histories, return all time history files and
-generate prospective RS files.</p>
-</dd></dl>
-<dl class="py function">
-<dt class="sig sig-object py" id="autoRS.get_output_header_string">
-<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">get_output_header_string</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#autoRS.get_output_header_string" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate header string for output Response Spectra output files.</p>
-</dd></dl>
-<dl class="py function">
-<dt class="sig sig-object py" id="autoRS.get_settings">
-<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">get_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'RS_settings.txt'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#autoRS.get_settings" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read the settings file (assuming it exists) and set up the settings
-dictionary.</p>
-</dd></dl>
-<dl class="py function">
-<dt class="sig sig-object py" id="autoRS.main">
-<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#autoRS.main" title="Permalink to this definition">¶</a></dt>
-<dd><p>Main function to run upon opening module or exe file.</p>
-</dd></dl>
-<dl class="py function">
-<dt class="sig sig-object py" id="autoRS.make_RS_folder">
-<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">make_RS_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#autoRS.make_RS_folder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Make RS folder at given path (if it does not exist already).
-Returns the final RS directory.</p>
-</dd></dl>
-<dl class="py function">
-<dt class="sig sig-object py" id="autoRS.process_settings">
-<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">process_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_settings</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#autoRS.process_settings" title="Permalink to this definition">¶</a></dt>
-<dd><p>Given a raw settings dictionary, update the program settings. Use default values
-in case of invalid raw setting definitions.</p>
-</dd></dl>
-<dl class="py function">
-<dt class="sig sig-object py" id="autoRS.write_default_settings">
-<span class="sig-prename descclassname"><span class="pre">autoRS.</span></span><span class="sig-name descname"><span class="pre">write_default_settings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'RS_settings.txt'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#autoRS.write_default_settings" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write default settings file.</p>
+<dl class="py data">
+<dt class="sig sig-object py" id="autoRS.spectrum.array_like_1d">
+<span class="sig-prename descclassname"><span class="pre">autoRS.spectrum.</span></span><span class="sig-name descname"><span class="pre">array_like_1d</span></span><a class="headerlink" href="#autoRS.spectrum.array_like_1d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Project specific type-alias for inputs/outputs of RS functions.</p>
+<p>alias of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]], <code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]], <code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>]</p>
 </dd></dl>
 </section>
 </section>
@@ -486,7 +614,6 @@ in case of invalid raw setting definitions.</p>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-autoRS.rw">autoRS.rw module</a></li>
 <li><a class="reference internal" href="#module-autoRS.spectrum">autoRS.spectrum module</a></li>
-<li><a class="reference internal" href="#module-autoRS">Module contents</a></li>
 </ul>
 </li>
 </ul>

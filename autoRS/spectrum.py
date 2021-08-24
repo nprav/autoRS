@@ -11,9 +11,11 @@ from typing import Tuple, Union, List
 # Third party imports
 import numpy as np
 
-# Type Aliases
+# Type Aliases. Docstrings provided for Sphinx autodoc.
 numeric = Union[int, float]
+
 array_like_1d = Union[List[numeric], Tuple[numeric], np.ndarray]
+"""Project specific type-alias for inputs/outputs of RS functions."""
 
 # %% Utility functions
 
@@ -158,8 +160,8 @@ def _step_rs(
     """Generate acceleration response spectrum by the step-by-step method [1].
     The algorithm matches the RS results from SHAKE2000. The theory behind
     the algorithm assumes a 'segmentally-linear' acceleration time history (TH).
-    Hence, the implicit assumption is that the time history nyquist frequency is
-    much higher than the highest frequency within the TH.
+    Hence, the implicit assumption is that the time history sampling frequency is
+    much higher (>8x) than the highest frequency within the TH.
 
     Use the `_fft_rs` method if there is frequency content close to the
     nyquist frequency. Or, use `scipy.signal.resample` to up-sample the acc. TH
@@ -301,15 +303,17 @@ def _fft_rs(
 
 # %% Global Variables
 
-# Constant that defines the available RS generation algorithms.
 RS_METHODS_DICT = {
     "fft": _fft_rs,
     "shake": _step_rs,
 }
+"""Dictionary that provides access to the available RS generation algorithms."""
 
 RS_METHODS = tuple(RS_METHODS_DICT.keys())
+"""Tuple that lists the available RS generation algorithms."""
 
 DEFAULT_METHOD = "fft"
+"""Default RS algorithm method."""
 
 
 # %% Public RS generation functions
@@ -332,14 +336,17 @@ def response_spectrum(
         Input 1D acceleration time history.
     time : 1d array_like
         Input 1D time values for the acceleration time history, `acc`.
-    zeta : float, optional, defalut = 0.05
+    zeta : float, optional, default = 0.05
         Critical damping ratio (dimensionless). Defaults to 0.05. Should be between 0
         and 1.
     high_frequency : bool, optional, default = False
         Boolean that determines frequency range of RS. If false, the range is
         [0.1Hz, 100Hz]. If true, the range is [0.1Hz, 1000Hz].
     method : str, optional, default = `DEFAULT_METHOD`
-        The RS method to be used. See `RS_METHODS`.
+        The RS method to be used. See `RS_METHODS`. The 'fft' default method is more
+        accurate and generally faster. The 'shake' step-by-step method is a common
+        implementation in industry (eg. SHAKE2000). Results may vary on average by <1%
+        provided the signal sampling frequency is > 8 x the highest frequency content.
 
     Returns
     -------
