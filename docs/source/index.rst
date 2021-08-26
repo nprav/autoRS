@@ -1,7 +1,5 @@
 .. autoRS documentation master file, created by
    sphinx-quickstart on Thu Aug 12 21:17:03 2021.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
 Welcome to autoRS's documentation!
 ==================================
@@ -24,8 +22,7 @@ The autoRS repository includes the Python module for the underlying behaviour. T
    the top of the file. The second header line is assumed to designate the title of
    each column in the data.
 
-New capabilities to be added
-----------------------------
+**Future capabilities**
 
 * Generation of velocity and displacement response spectra.
 * Additional settings including:
@@ -35,13 +32,13 @@ New capabilities to be added
    * Generation of RS plots.
 
 
-Contents
---------
+Module Contents
+===============
 
 .. toctree::
    :maxdepth: 2
 
-   modules
+   autoRS
 
 
 Indices and tables

@@ -82,6 +82,7 @@ def get_default_frequencies(high_frequency: bool = False) -> np.ndarray:
 
 
 # %% Raw private response spectrum generation functions
+# TODO: Experiment with Numba
 
 
 def _get_step_matrix(

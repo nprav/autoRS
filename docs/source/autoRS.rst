@@ -1,14 +1,13 @@
 autoRS package
 ==============
 
+autoRS.__init__ module
+----------------------
+
 .. automodule:: autoRS
    :members:
    :undoc-members:
    :show-inheritance:
-
-
-Submodules
-----------
 
 autoRS.rw module
 ----------------

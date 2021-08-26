@@ -1,4 +1,4 @@
-misc/
+_misc/
 .idea/
 __pycache__/
 .pytest_cache/
@@ -24,3 +24,4 @@ docs/*/_templates
 # Experiment files/folders
 # experiment/
 *-checkpoint.ipynb
+experiment/_resources

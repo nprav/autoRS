@@ -1,17 +1,13 @@
 autoRS package
 ==============
 
-.. autodata:: autoRS.SETTINGS_FNAME
-.. autodata:: autoRS.DEFAULT_SETTINGS
+autoRS.__init__ module
+----------------------
 
 .. automodule:: autoRS
    :members:
    :undoc-members:
    :show-inheritance:
-
-
-Submodules
-----------
 
 autoRS.rw module
 ----------------
