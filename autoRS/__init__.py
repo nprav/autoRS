@@ -1,7 +1,6 @@
 """Main controller and entry point for the autoRS package."""
 
 # %% Import required libraries
-# Standard library imports
 import os
 import re
 import sys

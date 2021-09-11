@@ -7,8 +7,8 @@ from typing import Optional
 import numpy as np
 
 # Local Application Imports
-from context import autoRS
-from autoRS.spectrum import array_like_1d, numeric
+# from context import autoRS
+from autoRS.typing import array_like_1d, numeric
 
 
 # Get closest higher power of 2

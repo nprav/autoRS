@@ -11,11 +11,8 @@ from typing import Tuple, Union, List
 # Third party imports
 import numpy as np
 
-# Type Aliases. Docstrings provided for Sphinx autodoc.
-numeric = Union[int, float]
-
-array_like_1d = Union[List[numeric], Tuple[numeric], np.ndarray]
-"""Project specific type-alias for inputs/outputs of RS functions."""
+# Local application imports
+from autoRS.typing import array_like_1d
 
 # %% Utility functions
 
@@ -82,7 +79,7 @@ def get_default_frequencies(high_frequency: bool = False) -> np.ndarray:
 
 
 # %% Raw private response spectrum generation functions
-# TODO: Experiment with Numba
+# TODO: Experiment with Numba to improve efficiency
 
 
 def _get_step_matrix(
@@ -195,7 +192,7 @@ def _step_rs(
     """
 
     # Enforce ndarray type
-    frqs = np.array(frqs)
+    frqs = np.asarray(frqs)
 
     # Instantiate angular frequency and spectral acceleration arrays
     w = frqs * 2 * np.pi
@@ -253,7 +250,7 @@ def _fft_rs(
     """
 
     # Enforce ndarray type
-    frqs = np.array(frqs)
+    frqs = np.asarray(frqs)
 
     # Instantiate angular frequency and spectral acceleration arrays
     w = frqs * 2 * np.pi
