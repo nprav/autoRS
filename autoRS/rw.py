@@ -101,7 +101,7 @@ def read_fort_txt(filename, header=8, cols=8, dgts=9) -> List[float]:
         Should be an integer greater than 0. Defaults to 8.
 
     cols : int, optional
-        Number of columns in fortran format.
+        Number of column_names in fortran format.
         Should be an integer greater than 0. Defaults to 8.
 
     dgts : int, optional
@@ -132,7 +132,7 @@ def read_fort_txt(filename, header=8, cols=8, dgts=9) -> List[float]:
 
 
 def read_csv_multi(filename: str, header: int = 1) -> [List[float], List[List[float]]]:
-    """Reads .csv files with multiple columns.
+    """Reads .csv files with multiple column_names.
 
     Parameters
     ----------

@@ -88,7 +88,7 @@ class TestMain(unittest.TestCase):
         th_path = os.path.join("test_resources", "nan_eg.csv",)
         rs_path = os.path.join("test_resources", "RS", "test5.csv",)
         autoRS.generate_rs_from_csv(th_path, rs_path)
-        # All columns in `nan_eg.csv` are invalid. No file should
+        # All column_names in `nan_eg.csv` are invalid. No file should
         # be generated.
         self.assertFalse(os.path.isfile(rs_path))
 

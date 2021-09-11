@@ -138,7 +138,7 @@ def generate_rs_from_csv(th_path: str, rs_path: str) -> None:
         deletechars=" !#$%&'()*+,-./:;<=>?[\\]^{|}~",
     )
 
-    # .csv file may have multiple time history columns. Hence, define RS
+    # .csv file may have multiple time history column_names. Hence, define RS
     # as a dictionary and generate separately for each column.
     rs = {}
     time_col = df_th.dtype.names[0]
@@ -159,7 +159,7 @@ def generate_rs_from_csv(th_path: str, rs_path: str) -> None:
     # If no valid THs and Nans detected in all cases, rs dictionary will be
     # empty. Exit from function
     if not rs:
-        print("No valid columns in file. No RS generated. File skipped.")
+        print("No valid column_names in file. No RS generated. File skipped.")
         return
 
     # Reformat `rs`, `frq` arrays as a combined array for use in np.savetxt.
