@@ -3,6 +3,7 @@
 
 # Standard library imports
 from collections.abc import MutableMapping
+from abc import ABC, abstractmethod
 from typing import Tuple, Union, Dict, Optional, Iterator, Sequence
 from copy import deepcopy
 
@@ -13,10 +14,40 @@ import numpy as np
 from autoRS.typing import array_like_1d, array_like_2d
 
 
-# %% Class definition
+# %% Class definitions
 
 
-class Table(MutableMapping):
+class Table(ABC, MutableMapping):
+    """Abstract class that defines an interface for 2D Tables as an
+    extension of dictionary-like objects. The Table o"""
+
+    @property
+    @abstractmethod
+    def data(self) -> np.ndarray:
+        pass
+
+    @property
+    @abstractmethod
+    def index(self) -> np.ndarray:
+        pass
+
+    @property
+    @abstractmethod
+    def column_names(self) -> Tuple[str]:
+        pass
+
+    @property
+    @abstractmethod
+    def index_name(self) -> str:
+        pass
+
+    @property
+    @abstractmethod
+    def shape(self) -> Tuple[int, int]:
+        pass
+
+
+class FloatTable(Table):
     """Class that represents 2D numerical data with an optional specified index column.
     """
 
@@ -33,10 +64,10 @@ class Table(MutableMapping):
         # Setup main data private variables
         self._data: Optional[np.ndarray] = None
         self._index: Optional[np.ndarray] = None
-        self._column_dict: Dict[str, np.ndarray] = {}
+        self._column_dict: Dict[str, int] = {}
+        self._index_name: str = index_name
 
-        # Setup index name and validate column_names
-        self.index_name = index_name
+        # Validate column_names
         self._invalid_column_names.add(index_name)
         if column_names is not None and set(column_names).intersection(
             self._invalid_column_names
@@ -69,13 +100,15 @@ class Table(MutableMapping):
 
     @data.setter
     def data(self, raw_data: Union[array_like_1d, array_like_2d]) -> None:
-        data = self._parse_data_not_dict(raw_data)
-        if self.data.size != 0 and self.data.shape != data.shape:
-            raise ValueError("Shape mis-match.")
-        if self.index is not None and len(self.index) != data.shape[0]:
+        raw_data = self._parse_data_not_dict(raw_data)
+        # If we know the index, compare shapes
+        if self.index is not None and self.shape[0] != raw_data.shape[0]:
             raise ValueError("Data does not match length of existing index.")
-        else:
-            self._data = data
+        # If we know the columns, compare shape
+        if self.column_names and self.shape[1] != raw_data.shape[1]:
+            raise ValueError("Data does not match length of existing columns.")
+
+        self._data = raw_data
         if self.index is None:
             self._set_index_from_data()
         if not self.column_names:
@@ -86,12 +119,12 @@ class Table(MutableMapping):
         return self._index
 
     @index.setter
-    def index(self, index: array_like_1d) -> None:
-        index = np.asarray(index)
-        if self.index is not None and len(index) != len(self.index):
+    def index(self, raw_index: array_like_1d) -> None:
+        raw_index = np.asarray(raw_index)
+        if self.index is not None and len(raw_index) != len(self.index):
             raise ValueError("Invalid size. New index does not match data length.")
         else:
-            self._index = index
+            self._index = raw_index
 
     @property
     def column_names(self) -> Tuple[str]:
@@ -108,6 +141,14 @@ class Table(MutableMapping):
             self._column_dict = {str(key): i for i, key in enumerate(column_names)}
 
     @property
+    def index_name(self):
+        return self._index_name
+
+    @index_name.setter
+    def index_name(self, raw_name: str):
+        self._index_name = str(raw_name)
+
+    @property
     def shape(self) -> Tuple[int, int]:
         x, y = 0, 0
         if self.index is not None:
@@ -115,26 +156,84 @@ class Table(MutableMapping):
         y = len(self.column_names)
         return x, y
 
-    # Magic methods
+    # Magic methods/ MutableMapping overrides
     def __delitem__(self, key: str) -> None:
-        pass
+        self._verify_key(key)
+        if key == self.index_name:
+            raise ValueError("Cannot delete index.")
+        else:
+            idx = self._column_dict[key]
+            self._data = np.delete(self._data, idx, axis=1)
+            self._column_dict.pop(key)
+            self.column_names = list(self._column_dict.keys())
 
     def __getitem__(self, key: str) -> array_like_1d:
+        self._verify_key(key)
         if key == self.index_name:
             return self.index
         idx = self._column_dict[key]
         return self.data[:, idx]
 
     def __setitem__(self, key: str, value: array_like_1d) -> None:
-        pass
+        value = np.asarray(value, dtype=float).flatten()
+
+        if key == self.index_name:
+            self.index = value
+            return
+
+        if self.index is not None and self.shape[0] != len(value):
+            raise ValueError("Value does not match length of Table index.")
+
+        if self.index is None:
+            self._set_index_from_data(value)
+
+        new_data = self.data
+        if key in self.column_names:
+            idx = self._column_dict[key]
+            new_data[:, idx] = value
+            self.data = new_data
+        else:
+            if new_data.size == 0:
+                new_data = value.reshape(-1, 1)
+            else:
+                new_data = np.append(new_data, value.reshape(-1, 1), axis=1)
+            self._data = new_data
+            self.column_names = [*self.column_names, key]
 
     def __len__(self) -> int:
         return self.shape[1]
 
     def __iter__(self) -> Iterator[Tuple[str, array_like_1d]]:
-        pass
+        for column_name in self.column_names:
+            yield column_name
 
-    # Helper methods
+    def __str__(self) -> str:
+        # TODO: Make nice table string.
+        return str(self.data)
+
+    # popitem() is implemented by MutableMapping by default, but items are returned in
+    # FIFO order. It is overridden to enforce LIFO order.
+    def popitem(self) -> [str, np.ndarray]:
+        """t.popitem() -> (k, v), remove and return some (key, value) pair
+        as a 2-tuple; but raise KeyError if t is empty. Pairs removed in LIFO
+        order."""
+        try:
+            key = self.column_names[-1]
+        except IndexError:
+            raise StopIteration
+        value = self[key]
+        del self[key]
+        return key, value
+
+    # Public methods
+    def reset_index(self):
+        if self.index is not None:
+            if self._data is None:
+                self._index = None
+            else:
+                self._index = np.arange(0, self.shape[0])
+
+    # Private Helper methods
     @staticmethod
     def _parse_data_dict(
         raw_data: Dict[str, array_like_1d]
@@ -170,8 +269,16 @@ class Table(MutableMapping):
 
         return data
 
-    def _set_index_from_data(self):
-        self.index = np.arange(0, self.data.shape[0])
+    def _set_index_from_data(self, raw_data: Optional[np.ndarray] = None):
+        if raw_data is not None:
+            raw_data = raw_data.reshape((-1, 1))
+        else:
+            raw_data = self.data
+        self.index = np.arange(0, raw_data.shape[0])
 
     def _set_column_names_from_data(self):
         self.column_names = [f"Col{i}" for i in range(self.data.shape[1])]
+
+    def _verify_key(self, key: str):
+        if key not in (*self.column_names, self.index_name):
+            raise KeyError(f"{key} not in column_names or index_name.")
