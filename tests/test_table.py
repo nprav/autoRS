@@ -8,7 +8,7 @@ import numpy as np
 
 # Local Application Imports
 from context import autoRS
-from autoRS.core import FloatTable
+from autoRS.core.table import FloatTable, SizeMismatchError, EmptyInputError
 
 
 class TestTable(unittest.TestCase):
@@ -46,16 +46,21 @@ class TestTable(unittest.TestCase):
         self.assertTrue(t1.column_names == ("a",))
 
     def test_invalid_data(self):
-        """Inputs to the Table class must be homogenous, numeric, and all column_names must
-        have the same number of rows/records."""
+        """Inputs to the Table class must be homogenous, numeric, and all
+        column_names must have the same number of rows/records."""
         with self.assertRaises(ValueError):
             t3 = FloatTable(raw_data=[[1, 2, 3], [1, 2]])
-        with self.assertRaises(ValueError):
+        with self.assertRaises(EmptyInputError):
+            t3 = FloatTable(raw_data={"a": []})
+        with self.assertRaises(SizeMismatchError):
             t3 = FloatTable(raw_data={"a": [1, 3], "b": [2, 4], "c": []})
         with self.assertRaises(ValueError):
             t3 = FloatTable(raw_data={"a": ["a", 3], "b": [2, 4]})
-        with self.assertRaises(ValueError):
-            t3 = FloatTable(raw_data={"a": ["a", 3], "b": [2, 4]})
+        t1 = FloatTable(raw_data={"a": [1, 2, 3]})
+        with self.assertRaises(EmptyInputError):
+            t1.data = []
+        with self.assertRaises(SizeMismatchError):
+            t1["b"] = [1]
 
     def test_index_input(self):
         """Tables contain an index that can be specified. The name of the index
@@ -120,12 +125,12 @@ class TestTable(unittest.TestCase):
         self.assertTrue(t.shape == (3, 1))
         self.assertTrue(all(t["Col1"] == np.array([1, 2, 3])))
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(SizeMismatchError):
             t = FloatTable()
             t.data = [[1, 2, 3], [3, 4, 5]]
             t.index = [1, 2, 3]
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(SizeMismatchError):
             t = FloatTable(column_names=["Col1"])
             t.data = [[1, 2]]
 
@@ -167,7 +172,7 @@ class TestTable(unittest.TestCase):
         t["c"] = [5, 5]
         self.assertTrue(all(t["c"] == np.array([5, 5])))
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(SizeMismatchError):
             t["c"] = [5, 5, 5]
         with self.assertRaises(ValueError):
             t["c"] = [5, 5, [5]]

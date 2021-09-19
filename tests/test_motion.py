@@ -51,6 +51,27 @@ class TestMotionHistory(unittest.TestCase):
         mh = MotionHistory(acceleration=acc)
         self.assertTrue(all(mh.acceleration == acc))
 
+        acc = self.th_arr[:, 0]
+        mh = MotionHistory(acceleration=acc)
+        self.assertTrue(all(mh.acceleration == acc))
+
+        dt = 0.005
+        t = np.arange(0, len(acc) * dt, dt)
+        mh = MotionHistory(time=t, acceleration=acc)
+        self.assertTrue(all(mh.time == t))
+        self.assertTrue(all(mh.table.index == t))
+
+        mh = MotionHistory(dt=dt, acceleration=acc)
+        self.assertTrue(all(mh.time == t))
+        self.assertTrue(mh.dt == dt)
+        self.assertTrue(all(mh.table.index == t))
+
+    def test_invalid_init(self):
+        """The MotionHistory class does not allow invalid data inputs.
+        Invalid inputs are motion arrays with size mis-matches. Invalid inputs
+        raise an Invalid Size exception."""
+        pass
+
 
 class TestMotionSpectrum(unittest.TestCase):
     def test_init(self):

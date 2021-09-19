@@ -24,31 +24,39 @@ class Table(ABC, MutableMapping):
     @property
     @abstractmethod
     def data(self) -> np.ndarray:
+        """Get the numpy ndarray representation of table data."""
         pass
 
     @property
     @abstractmethod
     def index(self) -> np.ndarray:
+        """Get the table index."""
         pass
 
     @property
     @abstractmethod
     def column_names(self) -> Tuple[str]:
+        """Get the names of all columns in the table."""
         pass
 
     @property
     @abstractmethod
     def index_name(self) -> str:
+        """Get the name of the Table index."""
         pass
 
     @property
     @abstractmethod
     def shape(self) -> Tuple[int, int]:
+        """Get the shape of the data. Similar to the shape of a numpy ndarray."""
         pass
 
 
+# TODO: Fill out all the docstrings
+
+
 class FloatTable(Table):
-    """Class that represents 2D numerical data with an optional specified index column.
+    """Class that represents 2D float-type data with an optional specified index column.
     """
 
     _invalid_column_names = {"Index"}
@@ -60,6 +68,25 @@ class FloatTable(Table):
         column_names: Optional[Sequence[str]] = None,
         index_name: str = "Index",
     ):
+        """Initialize the Table. The Table can be initialized with no data, with only
+        data, with only an index, or with data and an index.
+
+        Parameters
+        ----------
+        raw_data: dict[str: array_like_1d] or array_like_2d or array_like_1d
+            Data represented by the table. Can be input as a Dictionary of column name
+            keys matched with 1d arrays of data. The arrays must have the same length.
+            The data can also be input as a 1d or 2d arrays. However, the column names
+            would then have to be defined separately.
+        index: array_like_1d or None
+            Index for the Table. Defaults to 0, 1, 2, 3 ...
+        column_names: Sequence[str] or None
+            List of names for the Table columns. Defaults to ["Col0", "Col1", ... etc.].
+            The column names will be taken as the keys of `raw_data` if the data has
+            been input as a dictionary.
+        index_name: str
+            Name of the Table index. Defaults to "Index"
+        """
 
         # Setup main data private variables
         self._data: Optional[np.ndarray] = None
@@ -91,6 +118,7 @@ class FloatTable(Table):
     # Properties
     @property
     def data(self) -> np.ndarray:
+        """Get the numpy ndarray representation of table data."""
         if self._data is None:
             nan_data = np.empty(shape=self.shape)
             nan_data[:] = np.nan
@@ -103,10 +131,16 @@ class FloatTable(Table):
         raw_data = self._parse_data_not_dict(raw_data)
         # If we know the index, compare shapes
         if self.index is not None and self.shape[0] != raw_data.shape[0]:
-            raise ValueError("Data does not match length of existing index.")
+            raise SizeMismatchError(
+                f"Number of rows in data ({raw_data.shape[0]}) does "
+                f"not match length of index ({self.shape[0]})."
+            )
         # If we know the columns, compare shape
         if self.column_names and self.shape[1] != raw_data.shape[1]:
-            raise ValueError("Data does not match length of existing columns.")
+            raise SizeMismatchError(
+                f"Number of columns in data ({raw_data.shape[1]}) does "
+                f"not match number of table columns ({self.shape[1]})."
+            )
 
         self._data = raw_data
         if self.index is None:
@@ -122,7 +156,10 @@ class FloatTable(Table):
     def index(self, raw_index: array_like_1d) -> None:
         raw_index = np.asarray(raw_index)
         if self.index is not None and len(raw_index) != len(self.index):
-            raise ValueError("Invalid size. New index does not match data length.")
+            raise SizeMismatchError(
+                f"Table index size is {len(self.index)}. "
+                f"Provided index size is {len(raw_index)}."
+            )
         else:
             self._index = raw_index
 
@@ -133,9 +170,9 @@ class FloatTable(Table):
     @column_names.setter
     def column_names(self, column_names: Optional[Sequence[str]] = None) -> None:
         if self.data.size != 0 and self.data.shape[1] != len(column_names):
-            raise ValueError(
-                "Size Mis-match between provided sequence of column "
-                "names and defined data."
+            raise SizeMismatchError(
+                f"Data contains {self.data.shape[1]} columns. {len(column_names)} "
+                f"column names provided."
             )
         else:
             self._column_dict = {str(key): i for i, key in enumerate(column_names)}
@@ -182,7 +219,7 @@ class FloatTable(Table):
             return
 
         if self.index is not None and self.shape[0] != len(value):
-            raise ValueError("Value does not match length of Table index.")
+            raise SizeMismatchError("Input does not match length of Table index.")
 
         if self.index is None:
             self._set_index_from_data(value)
@@ -239,9 +276,9 @@ class FloatTable(Table):
         raw_data: Dict[str, array_like_1d]
     ) -> [np.ndarray, Dict[str, int]]:
         if len(raw_data) == 0:
-            raise ValueError("Input Dictionary is empty.")
+            raise EmptyInputError()
         elif len(set([len(value) for value in raw_data.values()])) > 1:
-            raise ValueError("Invalid input dictionary. Mis-matched column lengths.")
+            raise SizeMismatchError("Dictionary value sizes are not consistent.")
 
         data = np.asarray(deepcopy(list(raw_data.values())), dtype=float).T
 
@@ -265,7 +302,7 @@ class FloatTable(Table):
             data = data.reshape((-1, 1))
 
         if any([x == 0 for x in data.shape]):
-            raise ValueError("Input contains empty array.")
+            raise EmptyInputError()
 
         return data
 
@@ -281,4 +318,27 @@ class FloatTable(Table):
 
     def _verify_key(self, key: str):
         if key not in (*self.column_names, self.index_name):
-            raise KeyError(f"{key} not in column_names or index_name.")
+            raise KeyError(
+                f"'{key}' not in column_names and '{key}' is not index_name."
+            )
+
+
+# Table Exceptions
+
+
+class SizeMismatchError(Exception):
+    """Exception that gets raised when the lengths of the
+    index or columns do not match."""
+
+    def __init__(self, context: Optional[str] = None) -> None:
+        message = "Invalid input. Mis-matched data lengths."
+        if context is not None:
+            message += " " + context
+        super().__init__(message)
+
+
+class EmptyInputError(Exception):
+    """Exception that is raised when inputs are or have an empty array."""
+
+    def __init__(self) -> None:
+        super().__init__("Input contains an empty array.")

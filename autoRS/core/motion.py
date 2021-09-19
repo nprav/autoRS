@@ -2,7 +2,7 @@
 # %% Import Necessary Modules
 
 # Standard library imports
-from typing import Tuple
+from typing import Tuple, Optional, Union
 from abc import ABC, abstractmethod
 from copy import deepcopy
 
@@ -72,44 +72,62 @@ class Spectrum(ABC):
 
 class MotionHistory(MotionTable, TimeHistory):
     """Class representing a motion time history, including acceleration, velocity,
-    displacement, and their fourier transforms."""
+    displacement, and an index with the time values."""
 
     TableClass = FloatTable
 
     def __init__(
         self,
         time: array_like_1d = None,
-        dt: numeric = None,
         acceleration: array_like_1d = None,
         velocity: array_like_1d = None,
         displacement: array_like_1d = None,
+        dt: float = None,
     ) -> None:
 
-        # Initialize table
+        # Initialize table and other private variables
         self._table = FloatTable(
             column_names=self._motion_column_names, index_name=self._index_name
         )
+        self._time: Optional[np.ndarray] = None
 
         # Setup motion inputs
         if acceleration is not None:
             self.acceleration = np.asarray(acceleration)
+        if velocity is not None:
+            self.velocity = np.asarray(velocity)
+        if displacement is not None:
+            self.displacement = np.asarray(displacement)
 
         # Setup time inputs
         if time is not None:
-            self._table.index = np.asarray(time)
-            self.dt = time[1] - time[0]
-
-    @property
-    def time(self) -> np.ndarray:
-        return self._table.index
-
-    @time.setter
-    def time(self, value: np.ndarray) -> None:
-        self._table.index = value
+            self.time = np.asarray(time)
+        elif dt is not None:
+            self.time_from_dt(dt)
 
     @property
     def table(self) -> TableClass:
         return deepcopy(self._table)
+
+    @property
+    def time(self) -> np.ndarray:
+        return self._time
+
+    @time.setter
+    def time(self, value: array_like_1d) -> None:
+        value = np.asarray(value)
+        self._table.index = value
+        self._time = value
+
+    @property
+    def dt(self) -> Union[np.ndarray, float, None]:
+        if self.time is None:
+            return None
+        diff_t = np.diff(self.time)
+        if len(np.unique(diff_t)) != 0:
+            return diff_t[0]
+        else:
+            return diff_t
 
     @property
     def acceleration(self) -> np.ndarray:
@@ -135,8 +153,21 @@ class MotionHistory(MotionTable, TimeHistory):
     def displacement(self, value: array_like_1d) -> None:
         self._table["displacement"] = value
 
+    def time_from_dt(self, dt: float, npts: Optional[int] = None):
+        if npts is None:
+            if self._table.shape[0] == 0:
+                raise ValueError(
+                    "npts is undefined. Must either define one of acceleration, "
+                    "velocity, and displacement, or input a value for npts."
+                )
+            else:
+                npts = self._table.shape[0]
+        self.time = np.arange(0, npts * dt, dt)
+
 
 class MotionSpectra(MotionTable, Spectrum):
+    """Class representing a motion spectrum, including acceleration, velocity,
+    displacement, and an index with frequencies."""
 
     TableClass = FloatTable
 
