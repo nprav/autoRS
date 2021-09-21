@@ -1,4 +1,5 @@
-"""Defines a custom class for representing Time Histories."""
+"""Defines custom classes for representing Motion Time Histories and
+Motion Fourier Spectra"""
 # %% Import Necessary Modules
 
 # Standard library imports
@@ -10,7 +11,7 @@ from copy import deepcopy
 import numpy as np
 
 # Local application imports
-from autoRS.typing import numeric, array_like_1d
+from autoRS.typing import array_like_1d
 from .table import Table, FloatTable
 
 # %% Abstract Class definitions
@@ -66,6 +67,10 @@ class Spectrum(ABC):
     def frequency(self) -> np.ndarray:
         pass
 
+    @property
+    def w(self) -> np.ndarray:
+        return 2 * np.pi * self.frequency
+
 
 # %% Abstract Class definitions
 
@@ -78,16 +83,16 @@ class MotionHistory(MotionTable, TimeHistory):
 
     def __init__(
         self,
-        time: array_like_1d = None,
-        acceleration: array_like_1d = None,
-        velocity: array_like_1d = None,
-        displacement: array_like_1d = None,
-        dt: float = None,
+        time: Optional[array_like_1d] = None,
+        acceleration: Optional[array_like_1d] = None,
+        velocity: Optional[array_like_1d] = None,
+        displacement: Optional[array_like_1d] = None,
+        dt: Optional[float] = None,
     ) -> None:
 
         # Initialize table and other private variables
         self._table = FloatTable(
-            column_names=self._motion_column_names, index_name=self._index_name
+            column_names=self._motion_column_names, index_name=self._index_name,
         )
         self._time: Optional[np.ndarray] = None
 

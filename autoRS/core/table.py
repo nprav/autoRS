@@ -270,6 +270,10 @@ class FloatTable(Table):
             else:
                 self._index = np.arange(0, self.shape[0])
 
+    # TODO: add_row function
+
+    # TODO: iterrows iterator
+
     # Private Helper methods
     @staticmethod
     def _parse_data_dict(

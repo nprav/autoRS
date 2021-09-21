@@ -11,6 +11,7 @@ from numpy.lib.recfunctions import structured_to_unstructured
 # Local Application Imports
 from context import autoRS
 from autoRS.core import MotionHistory, MotionSpectra
+from autoRS.core.table import EmptyInputError, SizeMismatchError
 
 # %% Tests
 motion_cols = ("acceleration", "velocity", "displacement")
@@ -36,6 +37,9 @@ class TestMotionHistory(unittest.TestCase):
         th_raw = structured_to_unstructured(th_raw)
         self.time = th_raw[:, 0]
         self.th_arr = th_raw[:, 1:-1]
+        self.acc = self.th_arr[:, 0]
+        self.dt = 0.005
+        self.t = np.arange(0, len(self.acc) * self.dt, self.dt)
 
     def test_init(self):
         """A Motion History can be initialized without any input,
@@ -47,30 +51,52 @@ class TestMotionHistory(unittest.TestCase):
         self.assertTrue(mh.table.shape == (0, 3))
         self.assertTrue(mh.table.index_name == "time")
 
-        acc = self.th_arr[:, 0]
-        mh = MotionHistory(acceleration=acc)
-        self.assertTrue(all(mh.acceleration == acc))
+        mh = MotionHistory(acceleration=self.acc)
+        self.assertTrue(all(mh.acceleration == self.acc))
 
-        acc = self.th_arr[:, 0]
-        mh = MotionHistory(acceleration=acc)
-        self.assertTrue(all(mh.acceleration == acc))
+        mh = MotionHistory(acceleration=self.acc)
+        self.assertTrue(all(mh.acceleration == self.acc))
 
-        dt = 0.005
-        t = np.arange(0, len(acc) * dt, dt)
-        mh = MotionHistory(time=t, acceleration=acc)
-        self.assertTrue(all(mh.time == t))
-        self.assertTrue(all(mh.table.index == t))
+        mh = MotionHistory(time=self.t, acceleration=self.acc)
+        self.assertTrue(all(mh.time == self.t))
+        self.assertTrue(all(mh.table.index == self.t))
 
-        mh = MotionHistory(dt=dt, acceleration=acc)
-        self.assertTrue(all(mh.time == t))
-        self.assertTrue(mh.dt == dt)
-        self.assertTrue(all(mh.table.index == t))
+        mh = MotionHistory(dt=self.dt, acceleration=self.acc)
+        self.assertTrue(all(mh.time == self.t))
+        self.assertTrue(mh.dt == self.dt)
+        self.assertTrue(all(mh.table.index == self.t))
 
-    def test_invalid_init(self):
+    def test_invalid_inputs(self):
         """The MotionHistory class does not allow invalid data inputs.
         Invalid inputs are motion arrays with size mis-matches. Invalid inputs
-        raise an Invalid Size exception."""
-        pass
+        raise an ValueErrors, SizeMismatchErrors, or EmptyInputErrors."""
+        t_inv = [1, 2, 3]
+        with self.assertRaises(SizeMismatchError):
+            mh = MotionHistory(time=t_inv, acceleration=self.acc)
+        with self.assertRaises(SizeMismatchError):
+            mh = MotionHistory(acceleration=self.acc, displacement=t_inv)
+        with self.assertRaises(SizeMismatchError):
+            mh = MotionHistory(acceleration=self.acc)
+            mh.velocity = t_inv
+        with self.assertRaises(EmptyInputError):
+            mh = MotionHistory(acceleration=[])
+        with self.assertRaises(SizeMismatchError):
+            mh = MotionHistory(acceleration=self.acc)
+            mh.velocity = []
+        with self.assertRaises(ValueError):
+            mh = MotionHistory(dt=self.dt)
+        with self.assertRaises(ValueError):
+            mh = MotionHistory()
+            mh.time_from_dt(self.dt)
+
+    def test_time_from_dt(self):
+        mh = MotionHistory(acceleration=self.acc)
+        mh.time_from_dt(self.dt)
+        self.assertTrue(all(mh.time == self.t))
+
+        mh = MotionHistory()
+        mh.time_from_dt(self.dt, len(self.acc))
+        self.assertTrue(all(mh.time == self.t))
 
 
 class TestMotionSpectrum(unittest.TestCase):
