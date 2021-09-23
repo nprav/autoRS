@@ -3,16 +3,17 @@ Motion Fourier Spectra"""
 # %% Import Necessary Modules
 
 # Standard library imports
-from typing import Tuple, Optional, Union
+from typing import Tuple, Optional, Union, Collection
 from abc import ABC, abstractmethod
-from copy import deepcopy
+from copy import deepcopy, copy
 
 # Third party imports
 import numpy as np
 
 # Local application imports
 from autoRS.typing import array_like_1d
-from .table import Table, FloatTable
+from autoRS.core.table import Table, FloatTable
+from autoRS.core.utils import cumulative_integral
 
 # %% Abstract Class definitions
 
@@ -72,7 +73,11 @@ class Spectrum(ABC):
         return 2 * np.pi * self.frequency
 
 
-# %% Abstract Class definitions
+# %% Main Class definitions
+
+# TODO: Add a TableIloc/TableView class that can be used to set
+#   act on specific parts of MotionTable components similar to np.ndarray
+#   indexing.
 
 
 class MotionHistory(MotionTable, TimeHistory):
@@ -91,24 +96,26 @@ class MotionHistory(MotionTable, TimeHistory):
     ) -> None:
 
         # Initialize table and other private variables
-        self._table = FloatTable(
-            column_names=self._motion_column_names, index_name=self._index_name,
-        )
-        self._time: Optional[np.ndarray] = None
+        self.reset()
+        self._last_updated: Optional[None] = None
 
         # Setup motion inputs
         if acceleration is not None:
             self.acceleration = np.asarray(acceleration)
-        if velocity is not None:
+        elif velocity is not None:
             self.velocity = np.asarray(velocity)
-        if displacement is not None:
+        elif displacement is not None:
             self.displacement = np.asarray(displacement)
 
         # Setup time inputs
         if time is not None:
             self.time = np.asarray(time)
-        elif dt is not None:
+        elif dt is not None and self._table.shape[0] > 0:
             self.time_from_dt(dt)
+        elif dt is not None:
+            raise ValueError(
+                "No acceleration/velocity/displacement defined. dt is ignored."
+            )
 
     @property
     def table(self) -> TableClass:
@@ -116,13 +123,12 @@ class MotionHistory(MotionTable, TimeHistory):
 
     @property
     def time(self) -> np.ndarray:
-        return self._time
+        return copy(self._table.index)
 
     @time.setter
     def time(self, value: array_like_1d) -> None:
         value = np.asarray(value)
         self._table.index = value
-        self._time = value
 
     @property
     def dt(self) -> Union[np.ndarray, float, None]:
@@ -136,27 +142,46 @@ class MotionHistory(MotionTable, TimeHistory):
 
     @property
     def acceleration(self) -> np.ndarray:
-        return self._table["acceleration"]
+        if np.isnan(self._table["acceleration"][0]) and self._last_updated is not None:
+            self._table["acceleration"] = np.gradient(self.velocity, self.time)
+        return copy(self._table["acceleration"])
 
     @acceleration.setter
     def acceleration(self, value: array_like_1d) -> None:
         self._table["acceleration"] = value
+        self._last_updated = "acceleration"
+        self.reset(skip_columns=("time", "acceleration"))
 
     @property
     def velocity(self) -> np.ndarray:
-        return self._table["velocity"]
+        if np.isnan(self._table["velocity"][0]):
+            if self._last_updated == "displacement":
+                self._table["velocity"] = np.gradient(self.displacement, self.time)
+            elif self._last_updated == "acceleration":
+                self._table["velocity"] = cumulative_integral(
+                    self.acceleration, self.time, method="trapezoidal",
+                )
+        return copy(self._table["velocity"])
 
     @velocity.setter
     def velocity(self, value: array_like_1d) -> None:
         self._table["velocity"] = value
+        self._last_updated = "velocity"
+        self.reset(skip_columns=("time", "velocity"))
 
     @property
     def displacement(self) -> np.ndarray:
-        return self._table["displacement"]
+        if np.isnan(self._table["displacement"][0]) and self._last_updated is not None:
+            self._table["displacement"] = cumulative_integral(
+                self.velocity, self.time, method="trapezoidal",
+            )
+        return copy(self._table["displacement"])
 
     @displacement.setter
     def displacement(self, value: array_like_1d) -> None:
         self._table["displacement"] = value
+        self._last_updated = "displacement"
+        self.reset(skip_columns=("time", "displacement"))
 
     def time_from_dt(self, dt: float, npts: Optional[int] = None):
         if npts is None:
@@ -168,6 +193,16 @@ class MotionHistory(MotionTable, TimeHistory):
             else:
                 npts = self._table.shape[0]
         self.time = np.arange(0, npts * dt, dt)
+
+    def reset(self, skip_columns: Optional[Collection[str]] = None) -> None:
+        column_set = {"time", "acceleration", "velocity", "displacement"}
+        if skip_columns is None:
+            self._table = self.TableClass(
+                column_names=self._motion_column_names, index_name=self._index_name,
+            )
+        else:
+            for col in column_set - set(skip_columns):
+                self._table[col] = np.ones(self._table.shape[0]) * np.nan
 
 
 class MotionSpectra(MotionTable, Spectrum):
